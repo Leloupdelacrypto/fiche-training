@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carnet d'entraînement - Haltères & Banc</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --text:#172033;
+      --muted:#697386;
+      --border:#e6eaf2;
+      --dark:#111827;
+      --blue:#2563eb;
+      --blue-soft:#dbeafe;
+      --green:#059669;
+      --green-soft:#d1fae5;
+      --amber:#d97706;
+      --amber-soft:#fef3c7;
+      --red:#dc2626;
+      --red-soft:#fee2e2;
+      --slate:#64748b;
+      --slate-soft:#f1f5f9;
+      --shadow:0 10px 28px rgba(15, 23, 42, .07);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #e0edff 0, transparent 32%),
+        radial-gradient(circle at top right, #f2e7ff 0, transparent 28%),
+        var(--bg);
+      color:var(--text);
+    }
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      background:rgba(255,255,255,.82);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid rgba(230,234,242,.9);
+    }
+    .wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:14px 0 10px;
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:46px;height:46px;border-radius:17px;background:var(--dark);
+      display:grid;place-items:center;color:white;font-weight:900;font-size:20px;
+      box-shadow:var(--shadow);
+    }
+    h1{font-size:19px;margin:0;line-height:1.1}
+    .sub{font-size:12px;color:var(--muted);margin-top:3px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    button, .filelabel{
+      border:0;
+      border-radius:15px;
+      padding:10px 13px;
+      font-weight:750;
+      cursor:pointer;
+      background:#fff;
+      color:var(--text);
+      border:1px solid var(--border);
+      box-shadow:0 4px 12px rgba(15,23,42,.04);
+      font-size:14px;
+    }
+    button.primary{background:var(--dark);color:#fff;border-color:var(--dark)}
+    button:hover,.filelabel:hover{filter:brightness(.98)}
+    input[type=file]{display:none}
+    .tabs{
+      display:flex;
+      gap:8px;
+      overflow-x:auto;
+      padding-bottom:12px;
+    }
+    .tab{
+      white-space:nowrap;
+      background:#fff;
+      color:var(--muted);
+      box-shadow:none;
+    }
+    .tab.active{background:var(--dark);color:white;border-color:var(--dark)}
+    main{padding:22px 0 40px}
+    .grid{display:grid;gap:16px}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .card{
+      background:rgba(255,255,255,.92);
+      border:1px solid rgba(230,234,242,.9);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card.pad{padding:20px}
+    .hero{
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      align-items:flex-end;
+      padding:22px;
+    }
+    h2{margin:0;font-size:26px;letter-spacing:-.02em}
+    h3{margin:0;font-size:18px}
+    p{margin:0}
+    .muted{color:var(--muted)}
+    .small{font-size:13px}
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      font-weight:800;
+      background:var(--slate-soft);
+      color:#475569;
+    }
+    .pill.blue{background:var(--blue-soft);color:#1d4ed8}
+    .pill.green{background:var(--green-soft);color:#047857}
+    .pill.amber{background:var(--amber-soft);color:#a16207}
+    .pill.red{background:var(--red-soft);color:#b91c1c}
+    .controls{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      min-width:330px;
+    }
+    label{display:block;font-size:12px;font-weight:800;color:#667085}
+    input,select,textarea{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:15px;
+      padding:11px 12px;
+      margin-top:6px;
+      background:#fff;
+      color:var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(37,99,235,.13);border-color:#93c5fd}
+    .exercise-head{
+      padding:16px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      border-bottom:1px solid var(--border);
+      background:linear-gradient(180deg,#fff,#fbfcff);
+    }
+    .exercise-title{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .suggestion{
+      background:#f8fafc;
+      border:1px solid var(--border);
+      border-radius:17px;
+      padding:10px 12px;
+      min-width:145px;
+    }
+    .suggestion .muted{font-size:12px}
+    .suggestion b{font-size:18px}
+    .exercise-body{
+      padding:16px 18px 18px;
+      display:grid;
+      grid-template-columns:1fr 1.2fr auto;
+      gap:12px;
+      align-items:end;
+    }
+    .cols2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .cols3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+    .cols4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .tip{
+      padding:0 18px 18px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .log-item{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      padding:16px;
+      align-items:flex-start;
+    }
+    .log-main{display:grid;gap:7px}
+    .stats-card{padding:18px}
+    .barrow{display:grid;grid-template-columns:120px 1fr 45px;gap:10px;align-items:center;margin:10px 0}
+    .bar{height:14px;background:var(--slate-soft);border-radius:999px;overflow:hidden}
+    .bar span{display:block;height:100%;background:linear-gradient(90deg,#3b82f6,#10b981);border-radius:999px}
+    canvas{width:100%;height:260px;border-radius:18px;background:#fff}
+    table{width:100%;border-collapse:separate;border-spacing:0 8px}
+    th{text-align:left;color:var(--muted);font-size:12px;padding:0 8px}
+    td{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px 8px;font-size:13px}
+    td:first-child{border-left:1px solid var(--border);border-radius:14px 0 0 14px}
+    td:last-child{border-right:1px solid var(--border);border-radius:0 14px 14px 0}
+    .measure-row{
+      display:grid;
+      grid-template-columns:1.1fr repeat(6,1fr) auto;
+      gap:8px;
+      align-items:end;
+      padding:16px;
+    }
+    .program-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    .program-ex{background:#f8fafc;border:1px solid var(--border);border-radius:18px;padding:13px;margin-top:10px}
+    .empty{padding:30px;text-align:center;color:var(--muted)}
+    .danger{background:var(--red-soft);color:#b91c1c;border-color:#fecaca}
+    .footer-note{margin-top:16px;color:var(--muted);font-size:12px;text-align:center}
+    @media (max-width:850px){
+      .hero{display:grid;align-items:stretch}
+      .controls{min-width:0}
+      .exercise-body{grid-template-columns:1fr}
+      .grid2,.program-grid{grid-template-columns:1fr}
+      .measure-row{grid-template-columns:1fr 1fr}
+      .actions{display:none}
+    }
+    @media (max-width:520px){
+      h2{font-size:22px}
+      .topbar{align-items:flex-start}
+      .controls,.cols3,.cols4{grid-template-columns:1fr 1fr}
+      .exercise-head{align-items:flex-start;flex-direction:column}
+      .suggestion{width:100%}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo">🏋️</div>
+          <div>
+            <h1>Carnet d'entraînement</h1>
+            <div class="sub">Haltères + banc · hypertrophie · 5 jours/semaine</div>
+          </div>
+        </div>
+        <div class="actions">
+          <button onclick="exportData()">Exporter</button>
+          <label class="filelabel">Importer<input type="file" accept="application/json" onchange="importData(event)"></label>
+          <button class="danger" onclick="resetData()">Reset</button>
+        </div>
+      </div>
+      <div class="tabs" id="tabs"></div>
+    </div>
+  </header>
+
+  <main class="wrap" id="app"></main>
+
+<script>
+const STORAGE_KEY = "training_app_html_v1";
+
+const program = {
+  "Push": [
+    { name: "Développé décliné haltères", muscle: "Pecs", sets: 4, min: 6, max: 10, rest: "90–120s", priority: "Haute", tip: "Omoplates serrées, trajectoire stable, amplitude contrôlée." },
+    { name: "Développé militaire haltères", muscle: "Épaules", sets: 4, min: 6, max: 10, rest: "90–120s", priority: "Haute", tip: "Abdos serrés, évite de cambrer en fin de série." },
+    { name: "Élévations latérales inclinées", muscle: "Épaules", sets: 3, min: 12, max: 20, rest: "45–75s", priority: "Moyenne", tip: "Bras légèrement fléchis, pas d'élan, contrôle la descente." },
+    { name: "Extension triceps au front", muscle: "Triceps", sets: 3, min: 10, max: 15, rest: "60–90s", priority: "Moyenne", tip: "Coudes fixes, étirement propre, pas de mouvement d'épaule." }
+  ],
+  "Pull": [
+    { name: "Rowing haltère", muscle: "Dos", sets: 4, min: 8, max: 12, rest: "90–120s", priority: "Haute", tip: "Tire le coude vers la hanche, ne transforme pas l'exercice en curl." },
+    { name: "Pec deck inversé haltères", muscle: "Deltoïde postérieur", sets: 3, min: 12, max: 20, rest: "45–75s", priority: "Moyenne", tip: "Petit poids, mouvement strict, contraction arrière d'épaule." },
+    { name: "Curl incliné", muscle: "Biceps", sets: 3, min: 10, max: 15, rest: "60–90s", priority: "Moyenne", tip: "Épaule reculée, étirement du biceps, pas d'élan." },
+    { name: "Spider curl", muscle: "Biceps", sets: 3, min: 10, max: 15, rest: "60–90s", priority: "Moyenne", tip: "Bras perpendiculaires au sol, contraction volontaire en haut." }
+  ],
+  "Jambes + abdos": [
+    { name: "Goblet squat", muscle: "Jambes", sets: 4, min: 10, max: 20, rest: "90–120s", priority: "Haute", tip: "Descente lente, pause en bas, genoux ouverts, buste solide." },
+    { name: "Fentes haltères", muscle: "Jambes", sets: 3, min: 10, max: 15, rest: "90s", priority: "Haute", tip: "Par jambe. Garde le buste droit, amplitude régulière." },
+    { name: "Crunch contrôlé", muscle: "Abdos", sets: 3, min: 15, max: 25, rest: "45–60s", priority: "Moyenne", tip: "Cherche l'enroulement, pas juste monter la tête." },
+    { name: "Gainage", muscle: "Abdos", sets: 3, min: 30, max: 60, rest: "45–60s", priority: "Moyenne", tip: "Secondes au lieu de reps. Bassin neutre, abdos serrés." }
+  ],
+  "Haut du corps": [
+    { name: "Rowing haltère", muscle: "Dos", sets: 3, min: 8, max: 12, rest: "90–120s", priority: "Haute", tip: "Séance rappel : propre, sans aller à l'échec trop tôt." },
+    { name: "Développé décliné haltères", muscle: "Pecs", sets: 3, min: 8, max: 12, rest: "90–120s", priority: "Haute", tip: "Volume propre, garde 1 à 2 reps en réserve." },
+    { name: "Développé militaire haltères", muscle: "Épaules", sets: 3, min: 8, max: 12, rest: "90s", priority: "Moyenne", tip: "Ne force pas si les épaules sont fatiguées." },
+    { name: "Élévations latérales inclinées", muscle: "Épaules", sets: 3, min: 12, max: 20, rest: "45–75s", priority: "Moyenne", tip: "Contrôle strict, cherche la brûlure propre." },
+    { name: "Curl incliné", muscle: "Biceps", sets: 2, min: 10, max: 15, rest: "60s", priority: "Basse", tip: "Petit volume d'entretien." },
+    { name: "Extension triceps au front", muscle: "Triceps", sets: 2, min: 10, max: 15, rest: "60s", priority: "Basse", tip: "Petit volume d'entretien." }
+  ],
+  "Bras + épaules": [
+    { name: "Élévations latérales inclinées", muscle: "Épaules", sets: 4, min: 12, max: 20, rest: "45–75s", priority: "Haute", tip: "Priorité au deltoïde moyen, pas aux trapèzes." },
+    { name: "Pec deck inversé haltères", muscle: "Deltoïde postérieur", sets: 3, min: 12, max: 20, rest: "45–75s", priority: "Moyenne", tip: "Contrôle et amplitude partielle propre si nécessaire." },
+    { name: "Spider curl", muscle: "Biceps", sets: 3, min: 10, max: 15, rest: "60–90s", priority: "Moyenne", tip: "Contraction en haut, pas de balancement." },
+    { name: "Curl incliné", muscle: "Biceps", sets: 3, min: 10, max: 15, rest: "60–90s", priority: "Moyenne", tip: "Étirement complet en bas." },
+    { name: "Extension triceps au front", muscle: "Triceps", sets: 3, min: 10, max: 15, rest: "60–90s", priority: "Moyenne", tip: "Garde les coudes stables." }
+  ]
+};
+
+const tabs = [
+  ["today","Séance"],
+  ["log","Journal"],
+  ["stats","Stats"],
+  ["measures","Mesures"],
+  ["program","Programme"]
+];
+
+let state = {
+  tab: "today",
+  session: defaultSession(),
+  date: today(),
+  logs: [],
+  measurements: [],
+  settings: { loadIncrement: 2, deloadRpe: 10 }
+};
+
+function defaultSession(){
+  const d = new Date().getDay();
+  if(d===1) return "Push";
+  if(d===2) return "Pull";
+  if(d===3) return "Jambes + abdos";
+  if(d===5) return "Haut du corps";
+  if(d===6) return "Bras + épaules";
+  return "Push";
+}
+function today(){ return new Date().toISOString().slice(0,10); }
+function id(){ return Math.random().toString(36).slice(2,10); }
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function load(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw){
+    try{ state = { ...state, ...JSON.parse(raw), tab:"today" }; }catch(e){}
+  }
+}
+function allExercises(){ return Object.values(program).flat(); }
+function escapeHtml(s){ return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function num(v){ return Number(String(v).replace(",", ".")) || 0; }
+function repsArray(log){ return [log.r1,log.r2,log.r3,log.r4].map(num).filter(Boolean); }
+function totalReps(log){ return repsArray(log).reduce((a,b)=>a+b,0); }
+function findExercise(name){ return allExercises().find(e=>e.name===name); }
+
+function actionFor(log, ex){
+  const reps = repsArray(log);
+  if(!reps.length) return ["À remplir",""];
+  const sets = ex?.sets || reps.length;
+  const max = ex?.max || 12;
+  const min = ex?.min || 8;
+  const rpe = num(log.rpe);
+  const allMax = reps.length >= sets && reps.slice(0,sets).every(r=>r>=max);
+  const low = reps.some(r=>r<min);
+  if(rpe >= state.settings.deloadRpe && low) return ["Alléger / revoir forme","red"];
+  if(allMax && rpe <= 9) return ["Augmenter","green"];
+  if(allMax && rpe >= 10) return ["Conserver","amber"];
+  return ["Conserver",""];
+}
+
+function nextLoad(exName){
+  const recent = [...state.logs].reverse().find(l => l.exercise === exName && num(l.load)>0);
+  if(!recent) return "—";
+  const ex = findExercise(exName);
+  const [act] = actionFor(recent, ex);
+  const cur = num(recent.load);
+  const inc = num(state.settings.loadIncrement) || 2;
+  if(act === "Augmenter") return `${cur + inc} kg`;
+  if(act === "Alléger / revoir forme") return `${Math.max(0, cur - inc)} kg`;
+  return `${cur} kg`;
+}
+
+function pill(text, cls=""){ return `<span class="pill ${cls}">${escapeHtml(text)}</span>`; }
+
+function renderTabs(){
+  document.getElementById("tabs").innerHTML = tabs.map(([key,label]) =>
+    `<button class="tab ${state.tab===key?"active":""}" onclick="setTab('${key}')">${label}</button>`
+  ).join("");
+}
+
+function setTab(t){ state.tab=t; render(); }
+
+function render(){
+  renderTabs();
+  const app = document.getElementById("app");
+  if(state.tab === "today") app.innerHTML = viewToday();
+  if(state.tab === "log") app.innerHTML = viewLog();
+  if(state.tab === "stats") {
+    app.innerHTML = viewStats();
+    setTimeout(drawWeightChart, 0);
+  }
+  if(state.tab === "measures") app.innerHTML = viewMeasures();
+  if(state.tab === "program") app.innerHTML = viewProgram();
+  save();
+}
+
+function viewToday(){
+  const list = program[state.session] || [];
+  return `
+    <section class="grid">
+      <div class="card hero">
+        <div>
+          ${pill("Séance du jour","blue")}
+          <h2 style="margin-top:10px">Choisis ta séance, remplis tes séries, sauvegarde.</h2>
+          <p class="muted small" style="margin-top:6px">La charge conseillée se base sur ton dernier résultat enregistré.</p>
+        </div>
+        <div class="controls">
+          <label>Date<input type="date" value="${state.date}" onchange="state.date=this.value; save()"></label>
+          <label>Séance
+            <select onchange="state.session=this.value; render()">
+              ${Object.keys(program).map(s=>`<option ${s===state.session?"selected":""}>${escapeHtml(s)}</option>`).join("")}
+            </select>
+          </label>
+        </div>
+      </div>
+      ${list.map(ex => exerciseCard(ex)).join("")}
+    </section>
+  `;
+}
+
+function exerciseCard(ex){
+  const key = ex.name.replaceAll(/[^a-zA-Z0-9]/g,"_");
+  return `
+    <div class="card">
+      <div class="exercise-head">
+        <div>
+          <div class="exercise-title">
+            <h3>${escapeHtml(ex.name)}</h3>
+            ${pill(ex.muscle)}
+            ${pill(ex.priority, ex.priority==="Haute"?"green":"")}
+          </div>
+          <p class="muted small" style="margin-top:6px">${ex.sets} séries · ${ex.min}–${ex.max} reps · repos ${ex.rest}</p>
+        </div>
+        <div class="suggestion">
+          <div class="muted">Charge conseillée</div>
+          <b>${nextLoad(ex.name)}</b>
+        </div>
+      </div>
+      <div class="exercise-body">
+        <div class="cols3">
+          <label>Charge kg<input id="${key}_load" inputmode="decimal" placeholder="ex: 20"></label>
+          <label>RPE<input id="${key}_rpe" inputmode="decimal" placeholder="7–10"></label>
+          <button class="primary" onclick="saveExercise('${escapeHtml(ex.name)}')">Sauver</button>
+        </div>
+        <div class="cols4">
+          <label>S1<input id="${key}_r1" inputmode="decimal" placeholder="reps"></label>
+          <label>S2<input id="${key}_r2" inputmode="decimal" placeholder="reps"></label>
+          <label>S3<input id="${key}_r3" inputmode="decimal" placeholder="reps"></label>
+          <label>S4<input id="${key}_r4" inputmode="decimal" placeholder="reps"></label>
+        </div>
+        <div>
+          <button onclick="quickFill('${escapeHtml(ex.name)}')">Répéter dernier</button>
+        </div>
+      </div>
+      <div class="tip">✅ ${escapeHtml(ex.tip)}</div>
+    </div>
+  `;
+}
+
+function exKey(name){ return name.replaceAll(/[^a-zA-Z0-9]/g,"_"); }
+
+function quickFill(name){
+  const recent = [...state.logs].reverse().find(l => l.exercise === name);
+  if(!recent) return alert("Aucun historique pour cet exercice.");
+  const k = exKey(name);
+  ["load","r1","r2","r3","r4","rpe"].forEach(f => {
+    const el = document.getElementById(`${k}_${f}`);
+    if(el) el.value = recent[f] || "";
+  });
+}
+
+function saveExercise(name){
+  const k = exKey(name);
+  const ex = findExercise(name);
+  const log = {
+    id:id(), date:state.date, session:state.session,
+    exercise:name, muscle:ex?.muscle || "",
+    load:document.getElementById(`${k}_load`)?.value || "",
+    r1:document.getElementById(`${k}_r1`)?.value || "",
+    r2:document.getElementById(`${k}_r2`)?.value || "",
+    r3:document.getElementById(`${k}_r3`)?.value || "",
+    r4:document.getElementById(`${k}_r4`)?.value || "",
+    rpe:document.getElementById(`${k}_rpe`)?.value || ""
+  };
+  state.logs.push(log);
+  save();
+  ["load","r1","r2","r3","r4","rpe"].forEach(f => {
+    const el = document.getElementById(`${k}_${f}`);
+    if(el) el.value = "";
+  });
+  alert(`${name} sauvegardé.`);
+}
+
+function viewLog(){
+  const logs = [...state.logs].reverse();
+  return `
+    <section class="grid">
+      <div class="card pad">
+        <h2>Journal</h2>
+        <p class="muted small" style="margin-top:6px">Historique des exercices sauvegardés. Les recommandations restent simples : augmenter, conserver ou alléger.</p>
+      </div>
+      ${logs.length ? logs.map(l => {
+        const ex = findExercise(l.exercise);
+        const [act, cls] = actionFor(l, ex);
+        return `
+          <div class="card log-item">
+            <div class="log-main">
+              <div>${pill(l.date,"blue")} ${pill(act,cls)} ${pill(l.session)}</div>
+              <h3>${escapeHtml(l.exercise)}</h3>
+              <p class="muted small">${escapeHtml(l.load || "—")} kg · reps ${escapeHtml(l.r1||"-")}/${escapeHtml(l.r2||"-")}/${escapeHtml(l.r3||"-")}/${escapeHtml(l.r4||"-")} · total ${totalReps(l)} · RPE ${escapeHtml(l.rpe||"—")}</p>
+            </div>
+            <button class="danger" onclick="deleteLog('${l.id}')">Suppr.</button>
+          </div>
+        `;
+      }).join("") : `<div class="card empty">Aucune séance enregistrée pour l'instant.</div>`}
+    </section>
+  `;
+}
+
+function deleteLog(logId){
+  state.logs = state.logs.filter(l=>l.id!==logId);
+  render();
+}
+
+function weeklyVolume(){
+  const res = {};
+  allExercises().forEach(e => res[e.muscle] = (res[e.muscle] || 0) + e.sets);
+  return Object.entries(res).map(([muscle,sets]) => ({muscle,sets})).sort((a,b)=>b.sets-a.sets);
+}
+
+function records(){
+  return allExercises().map(ex => {
+    const logs = state.logs.filter(l=>l.exercise===ex.name);
+    return {
+      name: ex.name,
+      load: Math.max(0, ...logs.map(l=>num(l.load))),
+      reps: Math.max(0, ...logs.map(totalReps))
+    };
+  });
+}
+
+function viewStats(){
+  const vol = weeklyVolume();
+  const max = Math.max(...vol.map(v=>v.sets),1);
+  return `
+    <section class="grid">
+      <div class="card pad">
+        <h2>Stats</h2>
+        <p class="muted small" style="margin-top:6px">De quoi vérifier l'équilibre du programme, les records et l'évolution poids/tour de taille.</p>
+      </div>
+      <div class="grid2">
+        <div class="card stats-card">
+          <h3>Volume hebdo par muscle</h3>
+          <div style="margin-top:14px">
+            ${vol.map(v=>`
+              <div class="barrow">
+                <b class="small">${escapeHtml(v.muscle)}</b>
+                <div class="bar"><span style="width:${Math.round((v.sets/max)*100)}%"></span></div>
+                <span class="small muted">${v.sets}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+        <div class="card stats-card">
+          <h3>Poids & tour de taille</h3>
+          <p class="muted small" style="margin-top:6px">Ajoute au moins deux mesures pour rendre le graphique utile.</p>
+          <canvas id="weightChart" width="700" height="330"></canvas>
+        </div>
+      </div>
+      <div class="card pad">
+        <h3>Records</h3>
+        <div style="overflow-x:auto;margin-top:10px">
+          <table>
+            <thead><tr><th>Exercice</th><th>Charge max</th><th>Meilleur total reps</th></tr></thead>
+            <tbody>
+              ${records().map(r=>`<tr><td><b>${escapeHtml(r.name)}</b></td><td>${r.load || "—"} kg</td><td>${r.reps || "—"}</td></tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function drawWeightChart(){
+  const canvas = document.getElementById("weightChart");
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const data = state.measurements.filter(m=>num(m.weight)||num(m.waist)).slice(-20);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle="#ffffff"; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle="#e6eaf2"; ctx.lineWidth=1;
+  for(let i=0;i<6;i++){
+    let y = 40 + i*48;
+    ctx.beginPath(); ctx.moveTo(45,y); ctx.lineTo(canvas.width-20,y); ctx.stroke();
+  }
+  ctx.fillStyle="#697386"; ctx.font="13px system-ui";
+  if(data.length < 2){
+    ctx.fillText("Pas assez de données.", 45, 160);
+    return;
+  }
+  const vals = data.flatMap(m => [num(m.weight)||null, num(m.waist)||null]).filter(Boolean);
+  const min = Math.min(...vals)-2, max = Math.max(...vals)+2;
+  function x(i){ return 55 + i*((canvas.width-95)/(data.length-1)); }
+  function y(v){ return 280 - ((v-min)/(max-min))*230; }
+  function line(key, color){
+    ctx.strokeStyle=color; ctx.lineWidth=4; ctx.beginPath();
+    let started=false;
+    data.forEach((m,i)=>{
+      const v = num(m[key]);
+      if(!v) return;
+      if(!started){ ctx.moveTo(x(i), y(v)); started=true; }
+      else ctx.lineTo(x(i), y(v));
+    });
+    ctx.stroke();
+  }
+  line("weight", "#2563eb");
+  line("waist", "#059669");
+  ctx.fillStyle="#2563eb"; ctx.fillText("Poids", 55, 25);
+  ctx.fillStyle="#059669"; ctx.fillText("Taille", 115, 25);
+  ctx.fillStyle="#697386";
+  data.forEach((m,i)=>{ if(i%Math.ceil(data.length/5)===0) ctx.fillText((m.date||"").slice(5), x(i)-12, 310); });
+}
+
+function viewMeasures(){
+  return `
+    <section class="grid">
+      <div class="card hero">
+        <div>
+          <h2>Mesures</h2>
+          <p class="muted small" style="margin-top:6px">Le tour de taille + le poids moyen sont plus fiables que le poids d'un seul jour.</p>
+        </div>
+        <button class="primary" onclick="addMeasure()">Ajouter une mesure</button>
+      </div>
+      ${state.measurements.length ? [...state.measurements].reverse().map(m => `
+        <div class="card measure-row">
+          <label>Date<input type="date" value="${escapeHtml(m.date)}" onchange="updateMeasure('${m.id}','date',this.value)"></label>
+          <label>Poids<input inputmode="decimal" value="${escapeHtml(m.weight||"")}" onchange="updateMeasure('${m.id}','weight',this.value)" placeholder="kg"></label>
+          <label>Taille<input inputmode="decimal" value="${escapeHtml(m.waist||"")}" onchange="updateMeasure('${m.id}','waist',this.value)" placeholder="cm"></label>
+          <label>Calories<input inputmode="decimal" value="${escapeHtml(m.calories||"")}" onchange="updateMeasure('${m.id}','calories',this.value)" placeholder="kcal"></label>
+          <label>Protéines<input inputmode="decimal" value="${escapeHtml(m.protein||"")}" onchange="updateMeasure('${m.id}','protein',this.value)" placeholder="g"></label>
+          <label>Sommeil<input inputmode="decimal" value="${escapeHtml(m.sleep||"")}" onchange="updateMeasure('${m.id}','sleep',this.value)" placeholder="h"></label>
+          <label>Pas<input inputmode="decimal" value="${escapeHtml(m.steps||"")}" onchange="updateMeasure('${m.id}','steps',this.value)" placeholder="pas"></label>
+          <button class="danger" onclick="deleteMeasure('${m.id}')">Suppr.</button>
+        </div>
+      `).join("") : `<div class="card empty">Aucune mesure pour l'instant.</div>`}
+    </section>
+  `;
+}
+
+function addMeasure(){
+  state.measurements.push({id:id(), date:today(), weight:"", waist:"", calories:"", protein:"", sleep:"", steps:""});
+  render();
+}
+function updateMeasure(mid, key, value){
+  state.measurements = state.measurements.map(m => m.id===mid ? {...m, [key]:value} : m);
+  save();
+}
+function deleteMeasure(mid){
+  state.measurements = state.measurements.filter(m=>m.id!==mid);
+  render();
+}
+
+function viewProgram(){
+  return `
+    <section class="grid">
+      <div class="card pad">
+        <h2>Programme complet</h2>
+        <p class="muted small" style="margin-top:6px">Organisation conseillée : lundi Push, mardi Pull, mercredi Jambes + abdos, jeudi repos/cardio léger, vendredi Haut du corps, samedi Bras + épaules, dimanche repos.</p>
+      </div>
+      <div class="program-grid">
+        ${Object.entries(program).map(([day,list]) => `
+          <div class="card pad">
+            <h3>${escapeHtml(day)}</h3>
+            ${list.map(ex => `
+              <div class="program-ex">
+                <div>${pill(ex.muscle)} ${pill(ex.priority, ex.priority==="Haute"?"green":"")}</div>
+                <h3 style="font-size:15px;margin-top:8px">${escapeHtml(ex.name)}</h3>
+                <p class="muted small" style="margin-top:4px">${ex.sets}×${ex.min}–${ex.max} · repos ${ex.rest}</p>
+                <p class="muted small" style="margin-top:6px">${escapeHtml(ex.tip)}</p>
+              </div>
+            `).join("")}
+          </div>
+        `).join("")}
+      </div>
+      <div class="card pad">
+        <h3>Sauvegarde</h3>
+        <p class="muted small" style="margin-top:6px">Les données restent dans ce navigateur. Fais un export JSON régulièrement si tu l'utilises vraiment.</p>
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="exportData()">Exporter JSON</button>
+          <label class="filelabel">Importer JSON<input type="file" accept="application/json" onchange="importData(event)"></label>
+          <button class="danger" onclick="resetData()">Effacer les données</button>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function exportData(){
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `carnet-entrainement-${today()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event){
+  const file = event.target.files?.[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const parsed = JSON.parse(String(reader.result));
+      state = { ...state, ...parsed, tab:"today" };
+      render();
+      alert("Données importées.");
+    }catch(e){
+      alert("Fichier invalide.");
+    }
+  };
+  reader.readAsText(file);
+}
+
+function resetData(){
+  if(confirm("Effacer toutes les données sauvegardées dans ce navigateur ?")){
+    localStorage.removeItem(STORAGE_KEY);
+    state.logs = [];
+    state.measurements = [];
+    state.tab = "today";
+    render();
+  }
+}
+
+load();
+render();
+</script>
+</body>
+</html>
