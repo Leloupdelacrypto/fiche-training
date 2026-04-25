@@ -3,227 +3,673 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Carnet d'entraînement - Haltères & Banc</title>
+  <title>Carnet d'entraînement — version améliorée</title>
   <style>
     :root{
-      --bg:#f5f7fb;
-      --card:#ffffff;
+      --bg:#f7f9fc;
+      --bg2:#eef4ff;
+      --card:rgba(255,255,255,.92);
       --text:#172033;
-      --muted:#697386;
-      --border:#e6eaf2;
+      --muted:#64748b;
+      --border:#e5eaf3;
+      --shadow:0 14px 34px rgba(15,23,42,.08);
+      --shadow-soft:0 8px 24px rgba(15,23,42,.06);
+      --radius:24px;
+      --radius-sm:18px;
       --dark:#111827;
       --blue:#2563eb;
       --blue-soft:#dbeafe;
+      --teal:#0f766e;
+      --teal-soft:#ccfbf1;
       --green:#059669;
       --green-soft:#d1fae5;
       --amber:#d97706;
       --amber-soft:#fef3c7;
       --red:#dc2626;
       --red-soft:#fee2e2;
-      --slate:#64748b;
+      --violet:#7c3aed;
+      --violet-soft:#ede9fe;
+      --pink:#db2777;
+      --pink-soft:#fce7f3;
+      --slate:#475569;
       --slate-soft:#f1f5f9;
-      --shadow:0 10px 28px rgba(15, 23, 42, .07);
-      --radius:22px;
+      --pecs:#3b82f6;
+      --back:#8b5cf6;
+      --shoulders:#f59e0b;
+      --biceps:#10b981;
+      --triceps:#ef4444;
+      --legs:#6366f1;
+      --abs:#14b8a6;
+      --rear:#ec4899;
     }
+
     *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
     body{
       margin:0;
       font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, #e0edff 0, transparent 32%),
-        radial-gradient(circle at top right, #f2e7ff 0, transparent 28%),
-        var(--bg);
       color:var(--text);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(96,165,250,.18), transparent 32%),
+        radial-gradient(circle at 100% 0%, rgba(167,139,250,.16), transparent 28%),
+        radial-gradient(circle at 50% 100%, rgba(16,185,129,.10), transparent 30%),
+        linear-gradient(180deg, #f7f9fc 0%, #eef4ff 100%);
+      min-height:100vh;
     }
+    button,input,select,textarea{font:inherit}
+    .wrap{max-width:1180px;margin:0 auto;padding:0 18px}
+    .hidden{display:none !important}
+    .small{font-size:12px}
+    .muted{color:var(--muted)}
+    .mono{font-variant-numeric:tabular-nums}
+
     header{
-      position:sticky;
-      top:0;
-      z-index:10;
-      background:rgba(255,255,255,.82);
-      backdrop-filter:blur(16px);
-      border-bottom:1px solid rgba(230,234,242,.9);
+      position:sticky;top:0;z-index:30;
+      backdrop-filter:blur(18px);
+      background:rgba(255,255,255,.78);
+      border-bottom:1px solid rgba(229,234,243,.85);
     }
-    .wrap{max-width:1120px;margin:0 auto;padding:0 16px}
     .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding:14px 0 10px;
+      display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 0 10px;
     }
-    .brand{display:flex;align-items:center;gap:12px}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
     .logo{
-      width:46px;height:46px;border-radius:17px;background:var(--dark);
-      display:grid;place-items:center;color:white;font-weight:900;font-size:20px;
-      box-shadow:var(--shadow);
+      width:48px;height:48px;border-radius:18px;
+      background:linear-gradient(135deg,#111827,#334155);
+      color:#fff;display:grid;place-items:center;
+      font-size:22px;box-shadow:var(--shadow-soft)
     }
-    h1{font-size:19px;margin:0;line-height:1.1}
-    .sub{font-size:12px;color:var(--muted);margin-top:3px}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
-    button, .filelabel{
-      border:0;
-      border-radius:15px;
-      padding:10px 13px;
+    h1{margin:0;font-size:20px;line-height:1.05}
+    .sub{font-size:12px;color:var(--muted);margin-top:4px}
+    .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+
+    button, .filelabel, .ghost-btn{
+      border:1px solid var(--border);
+      background:#fff;
+      color:var(--text);
+      border-radius:16px;
+      padding:10px 14px;
       font-weight:750;
       cursor:pointer;
-      background:#fff;
-      color:var(--text);
-      border:1px solid var(--border);
-      box-shadow:0 4px 12px rgba(15,23,42,.04);
-      font-size:14px;
+      box-shadow:0 4px 10px rgba(15,23,42,.04);
+      transition:.18s ease;
     }
-    button.primary{background:var(--dark);color:#fff;border-color:var(--dark)}
-    button:hover,.filelabel:hover{filter:brightness(.98)}
+    button:hover,.filelabel:hover,.ghost-btn:hover{transform:translateY(-1px);filter:brightness(.99)}
+    button.primary{background:linear-gradient(135deg,#111827,#1f2937);border-color:#111827;color:#fff}
+    button.soft{background:var(--blue-soft);color:#1d4ed8;border-color:#bfdbfe}
+    button.success{background:var(--green-soft);color:#047857;border-color:#a7f3d0}
+    button.warn{background:var(--amber-soft);color:#a16207;border-color:#fde68a}
+    button.danger{background:var(--red-soft);color:#b91c1c;border-color:#fecaca}
     input[type=file]{display:none}
-    .tabs{
-      display:flex;
-      gap:8px;
-      overflow-x:auto;
-      padding-bottom:12px;
-    }
-    .tab{
-      white-space:nowrap;
-      background:#fff;
-      color:var(--muted);
-      box-shadow:none;
-    }
-    .tab.active{background:var(--dark);color:white;border-color:var(--dark)}
-    main{padding:22px 0 40px}
+
+    .tabs{display:flex;gap:8px;overflow:auto;padding:0 0 12px}
+    .tab{white-space:nowrap;box-shadow:none;background:#fff;color:var(--muted)}
+    .tab.active{background:linear-gradient(135deg,#111827,#1f2937);border-color:#111827;color:#fff}
+
+    main{padding:22px 0 84px}
     .grid{display:grid;gap:16px}
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .cards4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+
     .card{
-      background:rgba(255,255,255,.92);
-      border:1px solid rgba(230,234,242,.9);
+      background:var(--card);
+      border:1px solid rgba(229,234,243,.92);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       overflow:hidden;
+      position:relative;
     }
     .card.pad{padding:20px}
-    .hero{
-      display:flex;
-      justify-content:space-between;
-      gap:20px;
-      align-items:flex-end;
-      padding:22px;
-    }
-    h2{margin:0;font-size:26px;letter-spacing:-.02em}
+    .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:12px}
+    h2{margin:0;font-size:28px;letter-spacing:-.03em}
     h3{margin:0;font-size:18px}
-    p{margin:0}
-    .muted{color:var(--muted)}
-    .small{font-size:13px}
+
+    .hero{
+      padding:22px;
+      display:grid;
+      grid-template-columns:1.2fr .9fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    .hero-main{
+      border-radius:22px;
+      padding:24px;
+      min-height:220px;
+      color:#fff;
+      position:relative;
+      overflow:hidden;
+      background:linear-gradient(135deg, #1d4ed8 0%, #2563eb 42%, #7c3aed 100%);
+    }
+    .hero-main::before,.hero-main::after{
+      content:"";position:absolute;border-radius:999px;opacity:.26;pointer-events:none;
+    }
+    .hero-main::before{width:240px;height:240px;background:#fff;right:-60px;top:-90px}
+    .hero-main::after{width:160px;height:160px;background:#fff;left:-30px;bottom:-70px}
+    .hero-main .eyebrow,.session-cover .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.18);font-weight:800;font-size:12px}
+    .hero-title{margin-top:16px;font-size:30px;font-weight:900;line-height:1.03;max-width:12ch;position:relative;z-index:1}
+    .hero-desc{margin-top:10px;max-width:50ch;color:rgba(255,255,255,.86);position:relative;z-index:1}
+    .hero-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;position:relative;z-index:1}
+    .hero-chip{padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.16);backdrop-filter:blur(8px);min-width:110px}
+    .hero-chip b{display:block;font-size:18px}
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;position:relative;z-index:1}
+    .hero-actions button{box-shadow:none}
+
+    .hero-side{display:grid;gap:16px}
+    .mini-card{padding:18px;border-radius:22px;background:rgba(255,255,255,.92);border:1px solid var(--border);box-shadow:var(--shadow-soft)}
+    .mini-card h3{font-size:17px}
+    .mini-card p{margin:6px 0 0}
+
     .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      border-radius:999px;
-      padding:6px 10px;
-      font-size:12px;
-      font-weight:800;
-      background:var(--slate-soft);
-      color:#475569;
+      display:inline-flex;align-items:center;gap:6px;
+      border-radius:999px;padding:6px 10px;font-size:12px;font-weight:850;
+      background:var(--slate-soft);color:#475569;
     }
     .pill.blue{background:var(--blue-soft);color:#1d4ed8}
     .pill.green{background:var(--green-soft);color:#047857}
     .pill.amber{background:var(--amber-soft);color:#a16207}
     .pill.red{background:var(--red-soft);color:#b91c1c}
-    .controls{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      min-width:330px;
+    .pill.violet{background:var(--violet-soft);color:#6d28d9}
+    .pill.pink{background:var(--pink-soft);color:#be185d}
+    .pill.teal{background:var(--teal-soft);color:#0f766e}
+
+    .kpi{
+      padding:18px;border-radius:20px;border:1px solid var(--border);background:#fff;box-shadow:var(--shadow-soft)
     }
-    label{display:block;font-size:12px;font-weight:800;color:#667085}
+    .kpi .label{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+    .kpi .value{font-size:30px;font-weight:900;letter-spacing:-.03em;margin-top:6px}
+    .kpi .delta{margin-top:8px;color:var(--muted);font-size:13px}
+
+    .session-cover{
+      min-height:170px;
+      display:flex;align-items:flex-end;
+      padding:20px;position:relative;overflow:hidden;color:#fff;
+      border-radius:24px;
+    }
+    .session-cover::before,.session-cover::after{content:"";position:absolute;border-radius:999px;pointer-events:none;opacity:.22;background:#fff}
+    .session-cover::before{width:180px;height:180px;top:-80px;right:-50px}
+    .session-cover::after{width:130px;height:130px;left:-25px;bottom:-48px}
+    .session-cover .content{position:relative;z-index:1}
+    .session-cover h2{font-size:30px;color:#fff}
+    .session-cover p{margin-top:8px;color:rgba(255,255,255,.84)}
+    .session-cover.push{background:linear-gradient(135deg,#fb923c,#f97316,#ef4444)}
+    .session-cover.pull{background:linear-gradient(135deg,#6366f1,#8b5cf6,#7c3aed)}
+    .session-cover.legs{background:linear-gradient(135deg,#06b6d4,#14b8a6,#22c55e)}
+    .session-cover.upper{background:linear-gradient(135deg,#3b82f6,#2563eb,#0ea5e9)}
+    .session-cover.arms{background:linear-gradient(135deg,#ec4899,#db2777,#8b5cf6)}
+
+    .controls{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    label{display:block;font-size:12px;font-weight:850;color:#667085}
     input,select,textarea{
-      width:100%;
-      border:1px solid var(--border);
-      border-radius:15px;
-      padding:11px 12px;
-      margin-top:6px;
-      background:#fff;
-      color:var(--text);
-      outline:none;
-      font-size:14px;
+      width:100%;margin-top:6px;padding:12px 13px;border-radius:16px;border:1px solid var(--border);background:#fff;color:var(--text);outline:none;
+      box-shadow:0 2px 6px rgba(15,23,42,.03) inset;
     }
-    input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(37,99,235,.13);border-color:#93c5fd}
-    .exercise-head{
-      padding:16px 18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      border-bottom:1px solid var(--border);
+    input:focus,select:focus,textarea:focus{border-color:#93c5fd;box-shadow:0 0 0 4px rgba(37,99,235,.13)}
+
+    .exercise-card{overflow:hidden}
+    .exercise-top{
+      display:grid;grid-template-columns:98px 1fr auto;gap:14px;align-items:center;
+      padding:18px;border-bottom:1px solid var(--border);
       background:linear-gradient(180deg,#fff,#fbfcff);
     }
-    .exercise-title{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .exercise-visual{
+      height:92px;border-radius:22px;display:grid;place-items:center;
+      color:#fff;font-size:38px;font-weight:900;box-shadow:var(--shadow-soft)
+    }
+    .visual-pecs{background:linear-gradient(135deg,var(--pecs),#60a5fa)}
+    .visual-dos{background:linear-gradient(135deg,var(--back),#a78bfa)}
+    .visual-épaules,.visual-epaules{background:linear-gradient(135deg,var(--shoulders),#fbbf24)}
+    .visual-biceps{background:linear-gradient(135deg,var(--biceps),#34d399)}
+    .visual-triceps{background:linear-gradient(135deg,var(--triceps),#fb7185)}
+    .visual-jambes{background:linear-gradient(135deg,var(--legs),#818cf8)}
+    .visual-abdos{background:linear-gradient(135deg,var(--abs),#2dd4bf)}
+    .visual-deltoïde-postérieur,.visual-deltoide-postérieur,.visual-deltoide-posterieur,.visual-deltoïde-posterieur{background:linear-gradient(135deg,var(--rear),#f472b6)}
+    .exercise-meta p{margin-top:6px;color:var(--muted)}
     .suggestion{
-      background:#f8fafc;
-      border:1px solid var(--border);
-      border-radius:17px;
-      padding:10px 12px;
-      min-width:145px;
+      background:#fff;border:1px solid var(--border);padding:12px 14px;border-radius:18px;min-width:155px;box-shadow:var(--shadow-soft)
     }
-    .suggestion .muted{font-size:12px}
-    .suggestion b{font-size:18px}
-    .exercise-body{
-      padding:16px 18px 18px;
-      display:grid;
-      grid-template-columns:1fr 1.2fr auto;
-      gap:12px;
-      align-items:end;
-    }
+    .suggestion .label{font-size:12px;color:var(--muted)}
+    .suggestion b{display:block;margin-top:4px;font-size:22px;letter-spacing:-.02em}
+    .exercise-body{padding:18px;display:grid;grid-template-columns:1fr 1.2fr auto;gap:12px;align-items:end}
     .cols2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .cols3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+    .cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
     .cols4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-    .tip{
-      padding:0 18px 18px;
-      color:var(--muted);
-      font-size:13px;
+    .exercise-footer{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;padding:0 18px 18px;flex-wrap:wrap}
+    .exercise-tip{color:var(--muted);font-size:13px;max-width:68ch}
+    .last-result{font-size:13px;color:var(--muted)}
+
+    .coach-grid{display:grid;grid-template-columns:1.2fr .9fr;gap:16px}
+    .coach-card{padding:18px}
+    .insight-list{display:grid;gap:12px}
+    .insight{
+      padding:16px;border-radius:20px;border:1px solid var(--border);background:#fff;display:flex;gap:14px;align-items:flex-start;box-shadow:var(--shadow-soft)
     }
-    .log-item{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      padding:16px;
-      align-items:flex-start;
-    }
-    .log-main{display:grid;gap:7px}
-    .stats-card{padding:18px}
+    .insight-icon{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;font-size:20px;flex:0 0 auto}
+    .icon-progress{background:var(--green-soft)}
+    .icon-fatigue{background:var(--red-soft)}
+    .icon-volume{background:var(--amber-soft)}
+    .icon-measure{background:var(--blue-soft)}
+    .icon-regularity{background:var(--violet-soft)}
+    .icon-focus{background:var(--teal-soft)}
+    .insight h3{font-size:16px;margin:0}
+    .insight p{margin:6px 0 0;color:var(--muted);line-height:1.45}
+
+    .timeline{display:grid;gap:12px}
+    .log-item{padding:18px;display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+    .log-head{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+    .log-item h3{font-size:18px}
+
     .barrow{display:grid;grid-template-columns:120px 1fr 45px;gap:10px;align-items:center;margin:10px 0}
     .bar{height:14px;background:var(--slate-soft);border-radius:999px;overflow:hidden}
-    .bar span{display:block;height:100%;background:linear-gradient(90deg,#3b82f6,#10b981);border-radius:999px}
+    .bar span{display:block;height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6,#10b981);border-radius:999px}
+
+    .record-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+    .record-card{padding:16px;border:1px solid var(--border);border-radius:20px;background:#fff;box-shadow:var(--shadow-soft)}
+    .record-card .value{font-size:26px;font-weight:900;letter-spacing:-.03em;margin-top:6px}
+
     canvas{width:100%;height:260px;border-radius:18px;background:#fff}
-    table{width:100%;border-collapse:separate;border-spacing:0 8px}
-    th{text-align:left;color:var(--muted);font-size:12px;padding:0 8px}
-    td{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:10px 8px;font-size:13px}
-    td:first-child{border-left:1px solid var(--border);border-radius:14px 0 0 14px}
-    td:last-child{border-right:1px solid var(--border);border-radius:0 14px 14px 0}
+
+    .measure-card{padding:18px}
     .measure-row{
-      display:grid;
-      grid-template-columns:1.1fr repeat(6,1fr) auto;
-      gap:8px;
-      align-items:end;
-      padding:16px;
+      display:grid;grid-template-columns:1.05fr repeat(6,1fr) auto;gap:8px;align-items:end;
+      padding:16px;border:1px solid var(--border);border-radius:20px;background:#fff;box-shadow:var(--shadow-soft)
     }
+
     .program-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-    .program-ex{background:#f8fafc;border:1px solid var(--border);border-radius:18px;padding:13px;margin-top:10px}
-    .empty{padding:30px;text-align:center;color:var(--muted)}
-    .danger{background:var(--red-soft);color:#b91c1c;border-color:#fecaca}
-    .footer-note{margin-top:16px;color:var(--muted);font-size:12px;text-align:center}
-    @media (max-width:850px){
-      .hero{display:grid;align-items:stretch}
-      .controls{min-width:0}
+    .program-card{padding:18px}
+    .program-ex{border:1px solid var(--border);border-radius:18px;padding:14px;background:#fff;margin-top:12px;box-shadow:var(--shadow-soft)}
+
+    .empty{padding:32px;text-align:center;color:var(--muted)}
+    .footer-note{margin-top:12px;text-align:center;color:var(--muted);font-size:12px}
+
+    .mobile-actions{
+      position:fixed;left:12px;right:12px;bottom:12px;z-index:25;
+      background:rgba(255,255,255,.85);backdrop-filter:blur(14px);
+      border:1px solid rgba(229,234,243,.96);border-radius:22px;padding:10px;
+      display:none;grid-template-columns:repeat(3,1fr);gap:8px;box-shadow:var(--shadow);
+    }
+    .mobile-actions button,.mobile-actions .filelabel{width:100%;display:flex;justify-content:center;align-items:center;padding:12px 10px}
+
+    .toast{
+      position:fixed;right:18px;bottom:18px;z-index:40;
+      background:#111827;color:#fff;padding:12px 14px;border-radius:16px;
+      box-shadow:var(--shadow);opacity:0;transform:translateY(8px);pointer-events:none;
+      transition:.22s ease;max-width:320px
+    }
+    .toast.show{opacity:1;transform:translateY(0)}
+
+    @media (max-width:980px){
+      .hero,.grid2,.coach-grid,.program-grid,.grid3,.cards4{grid-template-columns:1fr}
+      .record-grid{grid-template-columns:1fr}
       .exercise-body{grid-template-columns:1fr}
-      .grid2,.program-grid{grid-template-columns:1fr}
-      .measure-row{grid-template-columns:1fr 1fr}
+      .measure-row{grid-template-columns:repeat(2,1fr)}
       .actions{display:none}
+      .mobile-actions{display:grid}
+    }
+    @media (max-width:720px){
+      h2{font-size:24px}
+      .exercise-top{grid-template-columns:78px 1fr}
+      .suggestion{grid-column:1/-1}
+      .controls,.cols3,.cols4{grid-template-columns:1fr 1fr}
     }
     @media (max-width:520px){
-      h2{font-size:22px}
+      .wrap{padding:0 14px}
       .topbar{align-items:flex-start}
-      .controls,.cols3,.cols4{grid-template-columns:1fr 1fr}
-      .exercise-head{align-items:flex-start;flex-direction:column}
-      .suggestion{width:100%}
+      .hero-main{min-height:190px}
+      .hero-title{font-size:26px}
+      .cards4,.controls,.cols2,.cols3,.cols4,.measure-row{grid-template-columns:1fr}
+      .exercise-footer{flex-direction:column;align-items:flex-start}
+      .log-item{flex-direction:column}
+      .measure-row{padding:14px}
     }
+  
+    /* --- V3 : mode séance guidée --- */
+    .guided-shell{display:grid;gap:16px}
+    .guided-card{
+      min-height:560px;
+      padding:22px;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      gap:18px;
+      background:
+        radial-gradient(circle at 95% 5%, rgba(255,255,255,.24), transparent 28%),
+        linear-gradient(135deg,#1d4ed8,#7c3aed);
+      color:#fff;
+      border-radius:30px;
+      overflow:hidden;
+      position:relative;
+      box-shadow:0 22px 60px rgba(37,99,235,.22);
+    }
+    .guided-card::before{
+      content:"";
+      position:absolute;
+      width:360px;height:360px;border-radius:999px;
+      background:rgba(255,255,255,.12);
+      right:-120px;top:-160px;
+    }
+    .guided-card::after{
+      content:"";
+      position:absolute;
+      width:220px;height:220px;border-radius:999px;
+      background:rgba(255,255,255,.10);
+      left:-70px;bottom:-90px;
+    }
+    .guided-card > *{position:relative;z-index:1}
+    .guided-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+    .guided-pill{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.22);
+      color:#fff;border-radius:999px;padding:8px 12px;font-weight:850;font-size:12px;
+      backdrop-filter:blur(8px);
+    }
+    .guided-progress{min-width:190px}
+    .guided-progressbar{height:10px;background:rgba(255,255,255,.20);border-radius:999px;overflow:hidden;margin-top:8px}
+    .guided-progressbar span{display:block;height:100%;background:#fff;border-radius:999px;transition:.25s ease}
+    .guided-main{display:grid;grid-template-columns:.82fr 1.18fr;gap:18px;align-items:center}
+    .guided-visual{
+      min-height:300px;border-radius:28px;
+      display:grid;place-items:center;
+      background:rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.22);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);
+      backdrop-filter:blur(10px);
+    }
+    .guided-visual .big-icon{font-size:96px;filter:drop-shadow(0 20px 35px rgba(0,0,0,.22))}
+    .guided-info h2{font-size:38px;line-height:1;letter-spacing:-.05em;color:#fff;margin-bottom:10px}
+    .guided-info p{color:rgba(255,255,255,.82);line-height:1.5}
+    .guided-targets{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+    .guided-stat{
+      padding:14px;border-radius:20px;background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(8px);
+    }
+    .guided-stat .label{font-size:12px;color:rgba(255,255,255,.72);font-weight:850;text-transform:uppercase;letter-spacing:.04em}
+    .guided-stat .value{font-size:26px;font-weight:950;letter-spacing:-.04em;margin-top:4px}
+    .guided-controls{
+      display:grid;grid-template-columns:1fr 1fr;gap:14px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      padding:16px;border-radius:26px;backdrop-filter:blur(10px);
+    }
+    .guided-panel{display:grid;gap:12px}
+    .guided-control-title{font-weight:900;color:rgba(255,255,255,.85);font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+    .rep-stepper{display:grid;grid-template-columns:64px 1fr 64px;gap:10px;align-items:center}
+    .rep-stepper button,.rpe-buttons button,.guided-actions button{
+      box-shadow:none;border-color:rgba(255,255,255,.22);
+      background:rgba(255,255,255,.16);color:#fff;
+    }
+    .rep-stepper button{height:62px;border-radius:20px;font-size:30px}
+    .rep-value{
+      height:62px;display:grid;place-items:center;border-radius:22px;
+      background:#fff;color:#111827;font-size:34px;font-weight:950;
+      font-variant-numeric:tabular-nums;
+    }
+    .rpe-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .rpe-buttons button{padding:13px 8px}
+    .rpe-buttons button.active{background:#fff;color:#111827}
+    .guided-load{
+      display:grid;grid-template-columns:1fr 1fr;gap:10px;
+    }
+    .guided-load input{
+      background:rgba(255,255,255,.95);
+      border-color:rgba(255,255,255,.7);
+      margin:0;
+      color:#111827;
+      font-size:18px;
+      font-weight:900;
+    }
+    .guided-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+    .guided-actions .main-action{background:#fff;color:#111827;font-size:16px;padding:14px 18px}
+    .guided-actions .secondary{background:rgba(255,255,255,.14);color:#fff}
+    .rest-overlay{
+      position:fixed;inset:0;z-index:100;
+      display:none;place-items:center;padding:18px;
+      background:rgba(15,23,42,.70);
+      backdrop-filter:blur(18px);
+    }
+    .rest-overlay.show{display:grid}
+    .rest-card{
+      width:min(460px,100%);
+      border-radius:34px;
+      padding:28px;
+      background:linear-gradient(135deg,#ffffff,#eef4ff);
+      color:#111827;
+      box-shadow:0 30px 90px rgba(15,23,42,.35);
+      text-align:center;
+    }
+    .timer-ring{
+      width:210px;height:210px;margin:22px auto;
+      border-radius:999px;
+      display:grid;place-items:center;
+      background:conic-gradient(#2563eb var(--p,0%), #dbeafe 0);
+      position:relative;
+    }
+    .timer-ring::before{
+      content:"";position:absolute;inset:14px;background:#fff;border-radius:999px;
+    }
+    .timer-text{position:relative;font-size:48px;font-weight:950;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+    .rest-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+    .session-summary{
+      display:grid;gap:14px;
+    }
+    .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .summary-card{padding:16px;border-radius:22px;background:#fff;border:1px solid var(--border);box-shadow:var(--shadow-soft)}
+    .summary-card b{display:block;font-size:28px;letter-spacing:-.04em}
+    .summary-list{display:grid;gap:10px}
+    .summary-row{padding:14px;border-radius:18px;background:#fff;border:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;align-items:center}
+    .quick-target{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:16px;
+      background:rgba(255,255,255,.14);
+      color:rgba(255,255,255,.86);
+      border:1px solid rgba(255,255,255,.16);
+      font-size:13px;
+    }
+    @media(max-width:900px){
+      .guided-main,.guided-controls{grid-template-columns:1fr}
+      .guided-card{min-height:auto}
+      .guided-visual{min-height:180px}
+      .summary-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:520px){
+      .guided-card{padding:16px;border-radius:26px}
+      .guided-info h2{font-size:30px}
+      .guided-targets,.guided-load{grid-template-columns:1fr}
+      .rep-stepper{grid-template-columns:56px 1fr 56px}
+      .summary-grid{grid-template-columns:1fr}
+    }
+
+  
+    /* --- V4 : polish visuel --- */
+    .logo{background:linear-gradient(135deg,#2563eb,#7c3aed)}
+    .logo svg{width:24px;height:24px}
+    .tab{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:11px 14px;border-radius:16px;font-weight:800;
+    }
+    .tab .nav-icon,.bottom-item .nav-icon,.section-icon{
+      width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;
+    }
+    .tab .nav-icon svg,.bottom-item .nav-icon svg,.section-icon svg,.exercise-visual svg,.logo svg,.session-icon svg{
+      width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+    }
+    .session-icon{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px}
+    .exercise-visual{position:relative;overflow:hidden}
+    .exercise-visual::before{
+      content:"";position:absolute;inset:auto -15% -45% auto;width:90px;height:90px;border-radius:999px;background:rgba(255,255,255,.16)
+    }
+    .exercise-visual svg{width:44px;height:44px;position:relative;z-index:1}
+    .hero-main .eyebrow,.session-cover .eyebrow{gap:10px}
+    .dashboard-progress{
+      padding:18px 20px;border-radius:24px;background:linear-gradient(135deg,#ffffff,#f8fbff);
+      border:1px solid var(--border);box-shadow:var(--shadow);display:grid;gap:16px
+    }
+    .week-track{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:4px
+    }
+    .week-day{
+      padding:12px 10px;border-radius:18px;border:1px solid var(--border);
+      background:#fff;text-align:center;box-shadow:var(--shadow-soft)
+    }
+    .week-day.done{background:linear-gradient(135deg,#dcfce7,#dbeafe);border-color:#bfdbfe}
+    .week-day .d{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase}
+    .week-day .s{font-size:13px;font-weight:900;margin-top:5px}
+    .week-bar{height:12px;border-radius:999px;background:#e8eef9;overflow:hidden}
+    .week-bar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#22c55e,#3b82f6,#8b5cf6)}
+    .micro-spark{
+      height:36px;display:flex;align-items:flex-end;gap:6px
+    }
+    .micro-spark span{
+      flex:1;border-radius:999px 999px 4px 4px;background:linear-gradient(180deg,#60a5fa,#2563eb);
+      opacity:.92;min-height:8px
+    }
+    .mobile-actions{display:none !important}
+    .mobile-bottom-nav{
+      position:fixed;left:12px;right:12px;bottom:12px;z-index:26;
+      display:none;grid-template-columns:repeat(5,1fr);gap:8px;
+      background:rgba(255,255,255,.88);backdrop-filter:blur(14px);
+      border:1px solid rgba(229,234,243,.96);border-radius:24px;padding:10px;
+      box-shadow:var(--shadow)
+    }
+    .bottom-item{
+      display:grid;place-items:center;gap:6px;padding:10px 6px;border:none;background:transparent;
+      border-radius:18px;color:var(--muted);font-size:11px;font-weight:800;cursor:pointer
+    }
+    .bottom-item.active{background:linear-gradient(135deg,#eff6ff,#ede9fe);color:#1f2937}
+    .bottom-item .nav-icon{width:20px;height:20px}
+    .exercise-meta h3{display:flex;align-items:center;gap:8px}
+    .exercise-meta h3 .section-icon{color:rgba(255,255,255,.92)}
+    @media(max-width:980px){
+      .mobile-bottom-nav{display:grid}
+      main{padding-bottom:100px}
+    }
+
+  
+    /* --- V5 : fiches exercice, exports CSV, résumé copiable --- */
+    .detail-modal{
+      position:fixed;inset:0;z-index:120;display:none;place-items:center;
+      background:rgba(15,23,42,.64);backdrop-filter:blur(16px);padding:18px;
+    }
+    .detail-modal.show{display:grid}
+    .detail-card{
+      width:min(860px,100%);max-height:92vh;overflow:auto;
+      background:linear-gradient(180deg,#ffffff,#f7faff);
+      border:1px solid var(--border);
+      border-radius:32px;
+      box-shadow:0 34px 100px rgba(15,23,42,.34);
+    }
+    .detail-hero{
+      min-height:230px;position:relative;overflow:hidden;color:#fff;padding:24px;
+      display:flex;align-items:flex-end;background:linear-gradient(135deg,#2563eb,#7c3aed);
+    }
+    .detail-hero::before{
+      content:"";position:absolute;right:-80px;top:-120px;width:280px;height:280px;border-radius:999px;background:rgba(255,255,255,.16)
+    }
+    .detail-hero::after{
+      content:"";position:absolute;left:-50px;bottom:-90px;width:190px;height:190px;border-radius:999px;background:rgba(255,255,255,.12)
+    }
+    .detail-hero-content{position:relative;z-index:1;width:100%}
+    .detail-hero h2{font-size:34px;color:#fff;margin-top:10px}
+    .detail-close{
+      position:absolute;right:18px;top:18px;z-index:2;background:rgba(255,255,255,.18);
+      color:#fff;border-color:rgba(255,255,255,.28);box-shadow:none
+    }
+    .detail-body{padding:22px;display:grid;gap:16px}
+    .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .detail-box{padding:16px;border-radius:22px;background:#fff;border:1px solid var(--border);box-shadow:var(--shadow-soft)}
+    .detail-box h3{font-size:16px;margin-bottom:10px}
+    .detail-list{display:grid;gap:8px;color:var(--muted);font-size:14px}
+    .detail-list div{padding:10px 12px;border-radius:14px;background:#f8fafc;border:1px solid #edf2f7}
+    .target-card{
+      padding:14px;border-radius:18px;background:linear-gradient(135deg,#eff6ff,#ecfdf5);
+      border:1px solid #bfdbfe;
+      display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap
+    }
+    .target-card b{font-size:18px}
+    .export-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .copy-summary{
+      display:grid;gap:12px;
+    }
+    .summary-textarea{
+      min-height:150px;background:#fff;border-radius:18px;border:1px solid var(--border);
+      padding:14px;color:var(--text);width:100%;resize:vertical;font-size:13px;line-height:1.5
+    }
+    .exercise-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .exercise-actions button{padding:9px 12px}
+    .next-target-inline{
+      margin-top:8px;font-size:13px;color:#475569;background:#f8fafc;border:1px solid var(--border);
+      border-radius:14px;padding:9px 11px;display:inline-flex;gap:8px;align-items:center
+    }
+    .image-slot{
+      height:170px;border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,.25);
+      background:rgba(255,255,255,.15);display:grid;place-items:center;margin-top:16px;
+      backdrop-filter:blur(8px)
+    }
+    .image-slot svg{width:82px;height:82px;stroke:#fff;opacity:.95}
+    .exercise-card:hover{transform:translateY(-2px);transition:.2s ease}
+    @media(max-width:800px){
+      .detail-grid{grid-template-columns:1fr}
+      .detail-hero h2{font-size:28px}
+    }
+
+  
+    /* --- V6 : récupération, modes séance courte/deload, recommandations --- */
+    .smart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .smart-card{
+      padding:18px;border-radius:24px;background:#fff;border:1px solid var(--border);
+      box-shadow:var(--shadow-soft);display:grid;gap:12px
+    }
+    .smart-card.featured{
+      background:linear-gradient(135deg,#eff6ff,#ecfeff);
+      border-color:#bfdbfe
+    }
+    .smart-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .readiness-ring{
+      width:132px;height:132px;border-radius:999px;margin:auto;
+      display:grid;place-items:center;
+      background:conic-gradient(#22c55e var(--score,60%), #e5eaf3 0);
+      position:relative
+    }
+    .readiness-ring::before{content:"";position:absolute;inset:12px;border-radius:999px;background:#fff}
+    .readiness-score{position:relative;text-align:center}
+    .readiness-score b{display:block;font-size:34px;letter-spacing:-.05em}
+    .recovery-row{
+      display:grid;grid-template-columns:1.1fr repeat(5,1fr) auto;gap:8px;align-items:end;
+      padding:16px;border-radius:22px;border:1px solid var(--border);background:#fff;box-shadow:var(--shadow-soft)
+    }
+    .rating-buttons{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:6px}
+    .rating-buttons button{padding:9px 6px;border-radius:12px;background:#fff;box-shadow:none}
+    .rating-buttons button.active{background:linear-gradient(135deg,#dbeafe,#dcfce7);border-color:#bfdbfe}
+    .coverage-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:12px}
+    .coverage-pill{
+      min-height:74px;border-radius:18px;border:1px solid var(--border);background:#fff;
+      display:grid;place-items:center;text-align:center;padding:8px;box-shadow:var(--shadow-soft)
+    }
+    .coverage-pill.done{background:linear-gradient(135deg,#dcfce7,#dbeafe);border-color:#bfdbfe}
+    .coverage-pill .icon{font-size:18px}
+    .coverage-pill .icon svg{width:20px;height:20px}
+    .coverage-pill .name{font-size:11px;font-weight:850;color:#475569;margin-top:4px}
+    .session-mode-banner{
+      margin-top:14px;padding:12px 14px;border-radius:18px;
+      background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);
+      color:rgba(255,255,255,.9)
+    }
+    .mini-calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:12px}
+    .cal-day{
+      min-height:76px;border-radius:16px;background:#fff;border:1px solid var(--border);
+      padding:8px;box-shadow:var(--shadow-soft);font-size:11px
+    }
+    .cal-day strong{display:block;font-size:13px;margin-bottom:4px}
+    .cal-day.has{background:linear-gradient(135deg,#eff6ff,#f0fdf4);border-color:#bfdbfe}
+    .cal-tag{display:inline-flex;margin-top:4px;padding:3px 6px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-weight:800;font-size:10px}
+    @media(max-width:900px){
+      .smart-grid{grid-template-columns:1fr}
+      .recovery-row{grid-template-columns:1fr 1fr}
+      .coverage-grid{grid-template-columns:repeat(3,1fr)}
+      .mini-calendar{grid-template-columns:repeat(2,1fr)}
+    }
+
   </style>
 </head>
 <body>
@@ -231,13 +677,14 @@
     <div class="wrap">
       <div class="topbar">
         <div class="brand">
-          <div class="logo">🏋️</div>
+          <div class="logo" id="logoIcon"></div>
           <div>
             <h1>Carnet d'entraînement</h1>
-            <div class="sub">Haltères + banc · hypertrophie · 5 jours/semaine</div>
+            <div class="sub">Version améliorée · haltères + banc · 5 jours/semaine</div>
           </div>
         </div>
         <div class="actions">
+          <button class="soft" onclick="setTab('dashboard')">Tableau de bord</button>
           <button onclick="exportData()">Exporter</button>
           <label class="filelabel">Importer<input type="file" accept="application/json" onchange="importData(event)"></label>
           <button class="danger" onclick="resetData()">Reset</button>
@@ -249,8 +696,41 @@
 
   <main class="wrap" id="app"></main>
 
+  <div class="mobile-actions">
+    <button class="soft" onclick="setTab('today')">Séance</button>
+    <button onclick="exportData()">Exporter</button>
+    <button class="danger" onclick="resetData()">Reset</button>
+  </div>
+
+  <div class="mobile-bottom-nav" id="mobileBottomNav"></div>
+
+  <div class="detail-modal" id="detailModal"></div>
+  <div class="toast" id="toast"></div>
+
 <script>
 const STORAGE_KEY = "training_app_html_v1";
+
+function iconSvg(name){
+  const icons = {
+    home:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h5v-6h4v6h5V9.5"/></svg>`,
+    play:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6v12l10-6-10-6Z"/></svg>`,
+    coach:`<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.8-3.3 4.2-5 7-5s5.2 1.7 7 5"/><path d="M19 5h2v4"/></svg>`,
+    stats:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20v-12"/></svg>`,
+    ruler:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21 21 3"/><path d="M14 4l6 6"/><path d="M8 10l2 2"/><path d="M5 13l2 2"/><path d="M11 7l2 2"/></svg>`,
+    book:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H20v15H7a3 3 0 0 0-3 3z"/><path d="M7 20c-1.7 0-3 1.3-3 3"/><path d="M8 8h8"/><path d="M8 12h8"/></svg>`,
+    dashboard:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13a8 8 0 1 1 16 0"/><path d="M12 13 16 9"/><path d="M12 13l-4 6"/><path d="M6 13h1"/><path d="M17 13h1"/></svg>`,
+    dumbbell:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6"/><path d="M7 7v10"/><path d="M17 7v10"/><path d="M20 9v6"/><path d="M7 12h10"/></svg>`,
+    chest:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5c2 1 3 3 3 5v8"/><path d="M17 5c-2 1-3 3-3 5v8"/><path d="M10 10h4"/><path d="M6 20h12"/></svg>`,
+    back:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4c0 2-1 3-3 4"/><path d="M15 4c0 2 1 3 3 4"/><path d="M8 8c1 2 2 3 4 4 2-1 3-2 4-4"/><path d="M9 12v8"/><path d="M15 12v8"/></svg>`,
+    shoulders:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8c1.5 0 3 1.5 3 4"/><path d="M18 8c-1.5 0-3 1.5-3 4"/><path d="M9 12h6"/><path d="M7 20c.5-3 2-4 5-4s4.5 1 5 4"/></svg>`,
+    biceps:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14c1-3 2-5 5-5 1.5 0 2 .8 2 2v1c1.7 0 3 1.3 3 3v1H8a3 3 0 0 1-1-2z"/><path d="M9 10V7"/></svg>`,
+    triceps:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7c2 0 3 2 3 4v3"/><path d="M16 7c-2 0-3 2-3 4v3"/><path d="M7 18h10"/></svg>`,
+    legs:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4v7l-2 9"/><path d="M14 4v7l2 9"/><path d="M8 20h3"/><path d="M13 20h3"/></svg>`,
+    abs:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6"/><path d="M8 8h8"/><path d="M8 12h8"/><path d="M9 16h6"/><path d="M10 20h4"/></svg>`
+  };
+  return icons[name] || icons.dumbbell;
+}
+
 
 const program = {
   "Push": [
@@ -289,7 +769,11 @@ const program = {
 };
 
 const tabs = [
+  ["dashboard","Dashboard"],
   ["today","Séance"],
+  ["guided","Mode guidé"],
+  ["coach","Coach"],
+  ["recovery","Récup"],
   ["log","Journal"],
   ["stats","Stats"],
   ["measures","Mesures"],
@@ -297,11 +781,12 @@ const tabs = [
 ];
 
 let state = {
-  tab: "today",
+  tab: "dashboard",
   session: defaultSession(),
   date: today(),
   logs: [],
   measurements: [],
+  recovery: [],
   settings: { loadIncrement: 2, deloadRpe: 10 }
 };
 
@@ -320,29 +805,82 @@ function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 function load(){
   const raw = localStorage.getItem(STORAGE_KEY);
   if(raw){
-    try{ state = { ...state, ...JSON.parse(raw), tab:"today" }; }catch(e){}
+    try{ state = { ...state, ...JSON.parse(raw), tab: state.tab || "dashboard" }; }catch(e){}
   }
 }
 function allExercises(){ return Object.values(program).flat(); }
 function escapeHtml(s){ return String(s ?? "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 function num(v){ return Number(String(v).replace(",", ".")) || 0; }
-function repsArray(log){ return [log.r1,log.r2,log.r3,log.r4].map(num).filter(Boolean); }
+function repsArray(log){ return [log.r1,log.r2,log.r3,log.r4].map(num).filter(v=>v!==0); }
 function totalReps(log){ return repsArray(log).reduce((a,b)=>a+b,0); }
 function findExercise(name){ return allExercises().find(e=>e.name===name); }
+function setTab(t){ state.tab=t; render(); }
+function exKey(name){ return name.replaceAll(/[^a-zA-Z0-9]/g,"_"); }
+function uniqueExerciseLogs(name){ return state.logs.filter(l=>l.exercise===name); }
+function sessionClass(session){
+  if(session === "Push") return "push";
+  if(session === "Pull") return "pull";
+  if(session === "Jambes + abdos") return "legs";
+  if(session === "Haut du corps") return "upper";
+  return "arms";
+}
+function sessionIcon(session){
+  if(session === "Push") return `<span class="session-icon">${iconSvg('chest')}</span>`;
+  if(session === "Pull") return `<span class="session-icon">${iconSvg('back')}</span>`;
+  if(session === "Jambes + abdos") return `<span class="session-icon">${iconSvg('legs')}</span>`;
+  if(session === "Haut du corps") return `<span class="session-icon">${iconSvg('dumbbell')}</span>`;
+  return `<span class="session-icon">${iconSvg('shoulders')}</span>`;
+}
+function muscleIcon(muscle){
+  const key = slug(muscle);
+  if(key.includes('pec')) return iconSvg('chest');
+  if(key.includes('dos')) return iconSvg('back');
+  if(key.includes('epaules') || key.includes('épaules')) return iconSvg('shoulders');
+  if(key.includes('biceps')) return iconSvg('biceps');
+  if(key.includes('triceps')) return iconSvg('triceps');
+  if(key.includes('jambes')) return iconSvg('legs');
+  if(key.includes('abdos')) return iconSvg('abs');
+  if(key.includes('deltoide') || key.includes('deltoïde')) return iconSvg('shoulders');
+  return iconSvg('dumbbell');
+}
+function muscleClass(muscle){
+  const key = slug(muscle);
+  if(key.includes('pec')) return 'visual-pecs';
+  if(key.includes('dos')) return 'visual-dos';
+  if(key.includes('epaules') || key.includes('épaules')) return 'visual-epaules';
+  if(key.includes('biceps')) return 'visual-biceps';
+  if(key.includes('triceps')) return 'visual-triceps';
+  if(key.includes('jambes')) return 'visual-jambes';
+  if(key.includes('abdos')) return 'visual-abdos';
+  if(key.includes('deltoide') || key.includes('deltoïde')) return 'visual-deltoide-posterieur';
+  return 'visual-pecs';
+}
+function slug(str){
+  return String(str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-');
+}
+function pill(text, cls=''){ return `<span class="pill ${cls}">${escapeHtml(text)}</span>`; }
+function showToast(message){
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = message;
+  t.classList.add('show');
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(()=>t.classList.remove('show'), 2300);
+}
 
 function actionFor(log, ex){
   const reps = repsArray(log);
-  if(!reps.length) return ["À remplir",""];
+  if(!reps.length) return ["À remplir", ""];
   const sets = ex?.sets || reps.length;
   const max = ex?.max || 12;
   const min = ex?.min || 8;
   const rpe = num(log.rpe);
-  const allMax = reps.length >= sets && reps.slice(0,sets).every(r=>r>=max);
-  const low = reps.some(r=>r<min);
-  if(rpe >= state.settings.deloadRpe && low) return ["Alléger / revoir forme","red"];
-  if(allMax && rpe <= 9) return ["Augmenter","green"];
-  if(allMax && rpe >= 10) return ["Conserver","amber"];
-  return ["Conserver",""];
+  const allMax = reps.length >= Math.min(sets,reps.length) && reps.slice(0,sets).every(r => r >= max);
+  const low = reps.some(r => r < min);
+  if(rpe >= state.settings.deloadRpe && low) return ["Alléger / revoir forme", "red"];
+  if(allMax && rpe <= 9) return ["Augmenter", "green"];
+  if(allMax && rpe >= 10) return ["Conserver", "amber"];
+  return ["Conserver", ""];
 }
 
 function nextLoad(exName){
@@ -357,28 +895,272 @@ function nextLoad(exName){
   return `${cur} kg`;
 }
 
-function pill(text, cls=""){ return `<span class="pill ${cls}">${escapeHtml(text)}</span>`; }
-
-function renderTabs(){
-  document.getElementById("tabs").innerHTML = tabs.map(([key,label]) =>
-    `<button class="tab ${state.tab===key?"active":""}" onclick="setTab('${key}')">${label}</button>`
-  ).join("");
+function lastLogForExercise(exName){
+  return [...state.logs].reverse().find(l=>l.exercise===exName);
 }
 
-function setTab(t){ state.tab=t; render(); }
+function estimateSessionDuration(session){
+  const list = program[session] || [];
+  let minTotal = 0;
+  list.forEach(ex => {
+    minTotal += ex.sets * 1.2;
+    if(ex.rest.includes('120')) minTotal += ex.sets * 1.5;
+    else if(ex.rest.includes('90')) minTotal += ex.sets * 1.2;
+    else minTotal += ex.sets * 0.8;
+  });
+  return Math.round(minTotal);
+}
+
+function sessionsLast7Days(){
+  const threshold = Date.now() - 7*24*3600*1000;
+  return state.logs.filter(l=>new Date(l.date).getTime() >= threshold).length;
+}
+function uniqueSessionDaysLast7(){
+  const threshold = Date.now() - 7*24*3600*1000;
+  return new Set(state.logs.filter(l=>new Date(l.date).getTime() >= threshold).map(l=>l.date)).size;
+}
+function latestMeasurement(){ return [...state.measurements].reverse().find(m => num(m.weight) || num(m.waist)); }
+function latestWeight(){ const m = latestMeasurement(); return m && num(m.weight) ? `${num(m.weight)} kg` : '—'; }
+
+function weeklyVolume(){
+  const res = {};
+  allExercises().forEach(e => res[e.muscle] = (res[e.muscle] || 0) + e.sets);
+  return Object.entries(res).map(([muscle,sets]) => ({muscle,sets})).sort((a,b)=>b.sets-a.sets);
+}
+
+function records(){
+  return allExercises().map(ex => {
+    const logs = state.logs.filter(l=>l.exercise===ex.name);
+    return {
+      name: ex.name,
+      load: Math.max(0, ...logs.map(l=>num(l.load))),
+      reps: Math.max(0, ...logs.map(totalReps)),
+      count: logs.length
+    };
+  }).sort((a,b)=> (b.reps+b.load) - (a.reps+a.load));
+}
+
+function recentLogs(limit=5){ return [...state.logs].reverse().slice(0,limit); }
+
+function compareLastTwo(exerciseName){
+  const logs = [...state.logs].filter(l=>l.exercise===exerciseName).slice(-2);
+  if(logs.length < 2) return null;
+  const [prev, curr] = logs;
+  const loadDiff = num(curr.load) - num(prev.load);
+  const repsDiff = totalReps(curr) - totalReps(prev);
+  return { prev, curr, loadDiff, repsDiff };
+}
+
+function coachInsights(){
+  const insights = [];
+  const targetSessions = 5;
+  const recentDays = uniqueSessionDaysLast7();
+  if(recentDays >= 4){
+    insights.push({type:'regularity', title:'Très bonne régularité', text:`Tu as déjà validé ${recentDays} jours d'entraînement sur les 7 derniers jours. Continue comme ça.`, badge:'Régularité', icon:'📅'});
+  } else {
+    insights.push({type:'regularity', title:'Régularité à sécuriser', text:`Tu as validé ${recentDays} jours d'entraînement sur les 7 derniers jours. Vise ${targetSessions} jours sur la semaine complète.`, badge:'Régularité', icon:'📅'});
+  }
+
+  allExercises().forEach(ex => {
+    const cmp = compareLastTwo(ex.name);
+    if(!cmp) return;
+    if(cmp.loadDiff > 0 || cmp.repsDiff >= 2){
+      insights.push({type:'progress', title:`${ex.name} progresse`, text:`Bonne tendance sur ${ex.name} : ${cmp.loadDiff>0 ? `+${cmp.loadDiff} kg` : `+${cmp.repsDiff} reps`} par rapport à la fois précédente.`, badge:'Progression', icon:'📈'});
+    }
+  });
+
+  const highRpe = recentLogs(10).filter(l=>num(l.rpe)>=10);
+  if(highRpe.length){
+    const l = highRpe[0];
+    insights.push({type:'fatigue', title:'Fatigue élevée repérée', text:`${l.exercise} a été noté RPE ${l.rpe}. Garde la charge stable ou prolonge un peu le repos.`, badge:'Fatigue', icon:'😮‍💨'});
+  }
+
+  const vol = weeklyVolume();
+  if(vol.length){
+    insights.push({type:'volume', title:'Répartition du volume', text:`Le volume le plus élevé du programme est actuellement sur ${vol[0].muscle} (${vol[0].sets} séries). Vérifie que la récupération suit.`, badge:'Volume', icon:'📦'});
+  }
+
+  if(state.measurements.length >= 2){
+    const recent = state.measurements.filter(m=>num(m.weight) || num(m.waist)).slice(-2);
+    if(recent.length === 2){
+      const [a,b] = recent;
+      const weightDiff = +(num(b.weight)-num(a.weight)).toFixed(1);
+      const waistDiff = +(num(b.waist)-num(a.waist)).toFixed(1);
+      if(weightDiff <= 0 && waistDiff < 0){
+        insights.push({type:'measure', title:'Tendance mensurations positive', text:`Poids ${weightDiff === 0 ? 'stable' : weightDiff+' kg'} et tour de taille ${waistDiff} cm : très bon signal.`, badge:'Mesures', icon:'📏'});
+      } else {
+        insights.push({type:'measure', title:'Mensurations à suivre', text:`Dernière évolution : poids ${weightDiff >= 0 ? '+' : ''}${weightDiff} kg, tour de taille ${waistDiff >= 0 ? '+' : ''}${waistDiff} cm. Continue à surveiller la tendance globale.`, badge:'Mesures', icon:'📏'});
+      }
+    }
+  }
+
+  if(!insights.length){
+    insights.push({type:'focus', title:'Commence à logger quelques séances', text:'Dès que tu auras 2 ou 3 séances enregistrées, le coach local pourra dégager des tendances simples.', badge:'Conseil', icon:'✨'});
+  }
+
+  return insights.slice(0,7);
+}
+
+
+function tabIcon(key){
+  const map = {
+    dashboard:'dashboard',
+    today:'play',
+    guided:'play',
+    coach:'coach',
+    recovery:'ruler',
+    log:'book',
+    stats:'stats',
+    measures:'ruler',
+    program:'book'
+  };
+  return map[key] || 'home';
+}
+function renderTabs(){
+  document.getElementById('tabs').innerHTML = tabs.map(([key,label]) =>
+    `<button class="tab ${state.tab===key?'active':''}" onclick="setTab('${key}')"><span class="nav-icon">${iconSvg(tabIcon(key))}</span><span>${label}</span></button>`
+  ).join('');
+}
+function renderBottomNav(){
+  const items = [
+    ['dashboard','Accueil'],
+    ['guided','Séance'],
+    ['coach','Coach'],
+    ['recovery','Récup'],
+    ['stats','Stats']
+  ];
+  const nav = document.getElementById('mobileBottomNav');
+  if(!nav) return;
+  nav.innerHTML = items.map(([key,label]) => `
+    <button class="bottom-item ${state.tab===key?'active':''}" onclick="setTab('${key}')">
+      <span class="nav-icon">${iconSvg(tabIcon(key))}</span>
+      <span>${label}</span>
+    </button>
+  `).join('');
+}
+
 
 function render(){
   renderTabs();
-  const app = document.getElementById("app");
-  if(state.tab === "today") app.innerHTML = viewToday();
-  if(state.tab === "log") app.innerHTML = viewLog();
-  if(state.tab === "stats") {
-    app.innerHTML = viewStats();
-    setTimeout(drawWeightChart, 0);
-  }
-  if(state.tab === "measures") app.innerHTML = viewMeasures();
-  if(state.tab === "program") app.innerHTML = viewProgram();
+  renderBottomNav();
+  const logo = document.getElementById('logoIcon'); if(logo) logo.innerHTML = iconSvg('dumbbell');
+  const app = document.getElementById('app');
+  if(state.tab === 'dashboard') app.innerHTML = viewDashboard();
+  if(state.tab === 'today') app.innerHTML = viewToday();
+  if(state.tab === 'guided') { app.innerHTML = viewGuided(); setTimeout(updateGuidedTimerUI, 0); }
+  if(state.tab === 'coach') app.innerHTML = viewCoach();
+  if(state.tab === 'recovery') app.innerHTML = viewRecovery();
+  if(state.tab === 'log') app.innerHTML = viewLog();
+  if(state.tab === 'stats'){ app.innerHTML = viewStats(); setTimeout(drawWeightChart,0); }
+  if(state.tab === 'measures') app.innerHTML = viewMeasures();
+  if(state.tab === 'program') app.innerHTML = viewProgram();
+  postRenderEnhance();
   save();
+}
+
+function viewDashboard(){
+  const recs = recentLogs(3);
+  const recRecords = records().filter(r=>r.count).slice(0,4);
+  const latest = latestMeasurement();
+  return `
+    <section class="grid">
+      <div class="card hero">
+        <div class="hero-main">
+          <span class="eyebrow">${sessionIcon(state.session)} Aujourd'hui · ${escapeHtml(state.session)}</span>
+          <div class="hero-title">Prêt pour ta séance ${escapeHtml(state.session)} ?</div>
+          <div class="hero-desc">Tout est centralisé : saisie rapide, conseils simples, stats, mesures et suivi du programme sur 5 jours.</div>
+          <div class="hero-stats">
+            <div class="hero-chip"><span class="small">Exercices</span><b>${program[state.session].length}</b></div>
+            <div class="hero-chip"><span class="small">Durée estimée</span><b>${estimateSessionDuration(state.session)} min</b></div>
+            <div class="hero-chip"><span class="small">Poids récent</span><b>${latestWeight()}</b></div>
+          </div>
+          <div class="hero-actions">
+            <button onclick="startGuidedSession(state.session)">Démarrer guidé</button>
+            <button onclick="setTab('today')">Saisie rapide</button>
+            <button class="warn" onclick="setTab('coach')">Voir le coach</button>
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="mini-card">
+            <div class="section-head"><h3>Raccourci du jour</h3>${pill(state.date,'blue')}</div>
+            <p><b>${escapeHtml(state.session)}</b> · ${program[state.session].length} exercices · environ ${estimateSessionDuration(state.session)} min.</p>
+            <p class="muted">Idéal pour démarrer rapidement sans passer par le programme complet.</p>
+          </div>
+          <div class="mini-card">
+            <div class="section-head"><h3>Mini insight</h3>${pill('Coach','teal')}</div>
+            <p>${escapeHtml(coachInsights()[0]?.text || 'Commence quelques entrées pour obtenir des conseils.')}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="cards4">
+        <div class="kpi"><div class="label">Entrées journal</div><div class="value mono">${state.logs.length}</div><div class="delta">total sauvegardé</div></div>
+        <div class="kpi"><div class="label">Séances / 7 jours</div><div class="value mono">${uniqueSessionDaysLast7()}</div><div class="delta">jours avec entraînement</div></div>
+        <div class="kpi"><div class="label">Mesures</div><div class="value mono">${state.measurements.length}</div><div class="delta">poids / taille / sommeil…</div></div>
+        <div class="kpi"><div class="label">Session active</div><div class="value mono">${escapeHtml(state.session)}</div><div class="delta">sélection actuelle</div></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card pad">
+          <div class="section-head">
+            <div>
+              <h2>Activité récente</h2>
+              <p class="muted small">Les dernières saisies apparaissent ici.</p>
+            </div>
+            <button onclick="setTab('log')">Voir tout</button>
+            <button onclick="openCopySummary()">Copier résumé</button>
+          </div>
+          ${recs.length ? `<div class="timeline">${recs.map(l => {
+            const ex = findExercise(l.exercise);
+            const [act, cls] = actionFor(l, ex);
+            return `
+              <div class="card log-item" style="box-shadow:none;border-radius:20px">
+                <div>
+                  <div class="log-head">${pill(l.date,'blue')} ${pill(l.session)} ${pill(act,cls)}</div>
+                  <h3>${escapeHtml(l.exercise)}</h3>
+                  <div class="muted small">${escapeHtml(l.load || '—')} kg · ${repsArray(l).join('/')} · total ${totalReps(l)} · RPE ${escapeHtml(l.rpe || '—')}</div>
+                </div>
+              </div>`;
+          }).join('')}</div>` : `<div class="empty">Aucune entrée pour le moment.</div>`}
+        </div>
+
+        <div class="card pad">
+          <div class="section-head">
+            <div>
+              <h2>Records récents</h2>
+              <p class="muted small">Meilleures perfs détectées automatiquement.</p>
+            </div>
+            <button onclick="setTab('stats')">Stats</button>
+          </div>
+          ${recRecords.length ? `<div class="record-grid">${recRecords.map(r=>`
+            <div class="record-card">
+              ${pill('Record','violet')}
+              <h3 style="margin-top:10px">${escapeHtml(r.name)}</h3>
+              <div class="value mono">${r.load ? r.load + ' kg' : '—'}</div>
+              <div class="muted small">Total reps max : ${r.reps || '—'}</div>
+            </div>`).join('')}</div>` : `<div class="empty">Ajoute quelques logs pour débloquer les records.</div>`}
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="session-cover ${sessionClass(state.session)}">
+          <div class="content">
+            <div class="eyebrow">${sessionIcon(state.session)} Focus du jour</div>
+            <h2>${escapeHtml(state.session)}</h2>
+            <p>${program[state.session].map(ex=>ex.muscle).filter((v,i,a)=>a.indexOf(v)===i).join(' · ')}</p>
+          </div>
+        </div>
+        <div class="card pad">
+          <div class="section-head"><div><h2>Dernière mesure</h2><p class="muted small">Le dernier relevé enregistré.</p></div>${pill(latest ? latest.date : '—','green')}</div>
+          ${latest ? `
+            <div class="cards4" style="grid-template-columns:repeat(3,1fr)">
+              <div class="kpi"><div class="label">Poids</div><div class="value mono">${latest.weight || '—'}</div><div class="delta">kg</div></div>
+              <div class="kpi"><div class="label">Tour de taille</div><div class="value mono">${latest.waist || '—'}</div><div class="delta">cm</div></div>
+              <div class="kpi"><div class="label">Sommeil</div><div class="value mono">${latest.sleep || '—'}</div><div class="delta">h</div></div>
+            </div>` : `<div class="empty">Aucune mesure pour l'instant.</div>`}
+        </div>
+      </div>
+    </section>`;
 }
 
 function viewToday(){
@@ -386,40 +1168,65 @@ function viewToday(){
   return `
     <section class="grid">
       <div class="card hero">
-        <div>
-          ${pill("Séance du jour","blue")}
-          <h2 style="margin-top:10px">Choisis ta séance, remplis tes séries, sauvegarde.</h2>
-          <p class="muted small" style="margin-top:6px">La charge conseillée se base sur ton dernier résultat enregistré.</p>
+        <div class="hero-main ${sessionClass(state.session)}" style="background:${heroGradient(state.session)}">
+          <span class="eyebrow">${sessionIcon(state.session)} Séance active</span>
+          <div class="hero-title">${escapeHtml(state.session)}</div>
+          <div class="hero-desc">Remplis tes séries, ton RPE et ta charge. La recommandation se base sur ta dernière perf enregistrée pour chaque exercice.</div>
+          <div class="hero-stats">
+            <div class="hero-chip"><span class="small">Exercices</span><b>${list.length}</b></div>
+            <div class="hero-chip"><span class="small">Durée</span><b>${estimateSessionDuration(state.session)} min</b></div>
+            <div class="hero-chip"><span class="small">Date</span><b>${state.date.slice(5)}</b></div>
+          </div>
         </div>
-        <div class="controls">
-          <label>Date<input type="date" value="${state.date}" onchange="state.date=this.value; save()"></label>
-          <label>Séance
-            <select onchange="state.session=this.value; render()">
-              ${Object.keys(program).map(s=>`<option ${s===state.session?"selected":""}>${escapeHtml(s)}</option>`).join("")}
-            </select>
-          </label>
+        <div class="hero-side">
+          <div class="mini-card">
+            <div class="section-head"><h3>Paramètres rapides</h3>${pill('Séance','blue')}</div>
+            <div class="controls">
+              <label>Date<input type="date" value="${state.date}" onchange="state.date=this.value; save(); showToast('Date mise à jour')"></label>
+              <label>Séance
+                <select onchange="state.session=this.value; render()">
+                  ${Object.keys(program).map(s=>`<option ${s===state.session?'selected':''}>${escapeHtml(s)}</option>`).join('')}
+                </select>
+              </label>
+            </div>
+          </div>
+          <div class="mini-card">
+            <div class="section-head"><h3>Conseil du jour</h3>${pill('Coach','teal')}</div>
+            <p>${escapeHtml(coachInsights()[0]?.text || 'Pense à noter aussi ton RPE pour améliorer les recommandations.')}</p>
+          </div>
         </div>
       </div>
-      ${list.map(ex => exerciseCard(ex)).join("")}
-    </section>
-  `;
+      ${list.map(ex => exerciseCard(ex)).join('')}
+    </section>`;
+}
+
+function heroGradient(session){
+  if(session === 'Push') return 'linear-gradient(135deg,#fb923c,#f97316,#ef4444)';
+  if(session === 'Pull') return 'linear-gradient(135deg,#6366f1,#8b5cf6,#7c3aed)';
+  if(session === 'Jambes + abdos') return 'linear-gradient(135deg,#06b6d4,#14b8a6,#22c55e)';
+  if(session === 'Haut du corps') return 'linear-gradient(135deg,#3b82f6,#2563eb,#0ea5e9)';
+  return 'linear-gradient(135deg,#ec4899,#db2777,#8b5cf6)';
 }
 
 function exerciseCard(ex){
-  const key = ex.name.replaceAll(/[^a-zA-Z0-9]/g,"_");
+  const key = exKey(ex.name);
+  const last = lastLogForExercise(ex.name);
+  const [act, cls] = last ? actionFor(last, ex) : ['Nouveau', 'blue'];
   return `
-    <div class="card">
-      <div class="exercise-head">
-        <div>
-          <div class="exercise-title">
+    <div class="card exercise-card">
+      <div class="exercise-top">
+        <div class="exercise-visual ${muscleClass(ex.muscle)}">${muscleIcon(ex.muscle)}</div>
+        <div class="exercise-meta">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
             <h3>${escapeHtml(ex.name)}</h3>
             ${pill(ex.muscle)}
-            ${pill(ex.priority, ex.priority==="Haute"?"green":"")}
+            ${pill(ex.priority, ex.priority==='Haute' ? 'green' : ex.priority==='Basse' ? 'amber' : '')}
+            ${pill(act, cls)}
           </div>
-          <p class="muted small" style="margin-top:6px">${ex.sets} séries · ${ex.min}–${ex.max} reps · repos ${ex.rest}</p>
+          <p class="small">${ex.sets} séries · ${ex.min}–${ex.max} reps · repos ${ex.rest}</p>
         </div>
         <div class="suggestion">
-          <div class="muted">Charge conseillée</div>
+          <div class="label">Charge conseillée</div>
           <b>${nextLoad(ex.name)}</b>
         </div>
       </div>
@@ -437,45 +1244,114 @@ function exerciseCard(ex){
         </div>
         <div>
           <button onclick="quickFill('${escapeHtml(ex.name)}')">Répéter dernier</button>
+          <button onclick="openExerciseDetail('${escapeHtml(ex.name)}')">Fiche</button>
         </div>
       </div>
-      <div class="tip">✅ ${escapeHtml(ex.tip)}</div>
-    </div>
-  `;
+      <div class="exercise-footer">
+        <div class="exercise-tip">✅ ${escapeHtml(ex.tip)}</div>
+        <div class="last-result">${last ? `Dernier log : <b>${escapeHtml(last.load || '—')} kg</b> · ${repsArray(last).join('/')} · total ${totalReps(last)} · RPE ${escapeHtml(last.rpe || '—')}` : 'Aucun historique pour cet exercice.'}<div class="next-target-inline">🎯 ${escapeHtml(nextTargetForExercise(ex).text)}</div></div>
+      </div>
+    </div>`;
 }
-
-function exKey(name){ return name.replaceAll(/[^a-zA-Z0-9]/g,"_"); }
 
 function quickFill(name){
   const recent = [...state.logs].reverse().find(l => l.exercise === name);
-  if(!recent) return alert("Aucun historique pour cet exercice.");
+  if(!recent) return showToast('Aucun historique pour cet exercice.');
   const k = exKey(name);
-  ["load","r1","r2","r3","r4","rpe"].forEach(f => {
+  ['load','r1','r2','r3','r4','rpe'].forEach(f => {
     const el = document.getElementById(`${k}_${f}`);
-    if(el) el.value = recent[f] || "";
+    if(el) el.value = recent[f] || '';
   });
+  showToast(`Dernier log de ${name} recopié.`);
 }
 
 function saveExercise(name){
   const k = exKey(name);
   const ex = findExercise(name);
-  const log = {
-    id:id(), date:state.date, session:state.session,
-    exercise:name, muscle:ex?.muscle || "",
-    load:document.getElementById(`${k}_load`)?.value || "",
-    r1:document.getElementById(`${k}_r1`)?.value || "",
-    r2:document.getElementById(`${k}_r2`)?.value || "",
-    r3:document.getElementById(`${k}_r3`)?.value || "",
-    r4:document.getElementById(`${k}_r4`)?.value || "",
-    rpe:document.getElementById(`${k}_rpe`)?.value || ""
-  };
+  const load = document.getElementById(`${k}_load`)?.value || '';
+  const r1 = document.getElementById(`${k}_r1`)?.value || '';
+  const r2 = document.getElementById(`${k}_r2`)?.value || '';
+  const r3 = document.getElementById(`${k}_r3`)?.value || '';
+  const r4 = document.getElementById(`${k}_r4`)?.value || '';
+  const rpe = document.getElementById(`${k}_rpe`)?.value || '';
+  if(!load && !r1 && !r2 && !r3 && !r4) return showToast('Ajoute au moins une charge ou une série avant de sauvegarder.');
+  const log = { id:id(), date:state.date, session:state.session, exercise:name, muscle:ex?.muscle || '', load, r1, r2, r3, r4, rpe };
   state.logs.push(log);
-  save();
-  ["load","r1","r2","r3","r4","rpe"].forEach(f => {
+  ['load','r1','r2','r3','r4','rpe'].forEach(f => {
     const el = document.getElementById(`${k}_${f}`);
-    if(el) el.value = "";
+    if(el) el.value = '';
   });
-  alert(`${name} sauvegardé.`);
+  save();
+  showToast(`${name} sauvegardé.`);
+  render();
+}
+
+function viewCoach(){
+  const insights = coachInsights();
+  const last = recentLogs(6);
+  return `
+    <section class="grid">
+      <div class="card hero">
+        <div class="hero-main" style="background:linear-gradient(135deg,#0f766e,#14b8a6,#2563eb)">
+          <span class="eyebrow">🧠 Coach local</span>
+          <div class="hero-title">Des conseils simples à partir de tes données.</div>
+          <div class="hero-desc">Pas d'IA externe ici : juste des règles utiles basées sur ton historique, ton RPE et tes mesures.</div>
+          <div class="hero-stats">
+            <div class="hero-chip"><span class="small">Insights</span><b>${insights.length}</b></div>
+            <div class="hero-chip"><span class="small">Logs analysés</span><b>${state.logs.length}</b></div>
+            <div class="hero-chip"><span class="small">Mesures</span><b>${state.measurements.length}</b></div>
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="mini-card">
+            <div class="section-head"><h3>Priorité du moment</h3>${pill('Actionnable','green')}</div>
+            <p>${escapeHtml(insights[0]?.text || 'Ajoute davantage de données pour débloquer plus de conseils.')}</p>
+          </div>
+          <div class="mini-card">
+            <div class="section-head"><h3>Raccourci</h3>${pill('Séance','blue')}</div>
+            <button class="primary" onclick="setTab('today')">Revenir à la séance</button>
+          </div>
+        </div>
+      </div>
+      <div class="coach-grid">
+        <div class="card coach-card">
+          <div class="section-head"><div><h2>Conseils</h2><p class="muted small">Classés automatiquement selon les signaux détectés.</p></div></div>
+          <div class="insight-list">
+            ${insights.map(i=>`
+              <div class="insight">
+                <div class="insight-icon icon-${i.type}">${i.icon}</div>
+                <div>
+                  <div>${pill(i.badge, insightColor(i.type))}</div>
+                  <h3 style="margin-top:8px">${escapeHtml(i.title)}</h3>
+                  <p>${escapeHtml(i.text)}</p>
+                </div>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div class="card coach-card">
+          <div class="section-head"><div><h2>Dernières entrées analysées</h2><p class="muted small">Pour relier les conseils à des séances concrètes.</p></div></div>
+          ${last.length ? `<div class="timeline">${last.map(l=>{
+            const ex = findExercise(l.exercise);
+            const [act, cls] = actionFor(l, ex);
+            return `<div class="card log-item" style="box-shadow:none;border-radius:20px">
+              <div>
+                <div class="log-head">${pill(l.date,'blue')} ${pill(l.session)} ${pill(act,cls)}</div>
+                <h3>${escapeHtml(l.exercise)}</h3>
+                <div class="muted small">${escapeHtml(l.load || '—')} kg · ${repsArray(l).join('/')} · total ${totalReps(l)} · RPE ${escapeHtml(l.rpe || '—')}</div>
+              </div>
+            </div>`;
+          }).join('')}</div>` : `<div class="empty">Aucun log pour l'instant.</div>`}
+        </div>
+      </div>
+    </section>`;
+}
+function insightColor(type){
+  if(type==='progress') return 'green';
+  if(type==='fatigue') return 'red';
+  if(type==='volume') return 'amber';
+  if(type==='measure') return 'blue';
+  if(type==='regularity') return 'violet';
+  return 'teal';
 }
 
 function viewLog(){
@@ -483,60 +1359,44 @@ function viewLog(){
   return `
     <section class="grid">
       <div class="card pad">
-        <h2>Journal</h2>
-        <p class="muted small" style="margin-top:6px">Historique des exercices sauvegardés. Les recommandations restent simples : augmenter, conserver ou alléger.</p>
+        <div class="section-head">
+          <div><h2>Journal</h2><p class="muted small">Toutes les entrées enregistrées, avec recommandation simple.</p></div>
+          ${pill(`${logs.length} entrées`,'blue')}
+        </div>
       </div>
-      ${logs.length ? logs.map(l => {
+      ${logs.length ? `<div class="timeline">${logs.map(l => {
         const ex = findExercise(l.exercise);
         const [act, cls] = actionFor(l, ex);
         return `
           <div class="card log-item">
-            <div class="log-main">
-              <div>${pill(l.date,"blue")} ${pill(act,cls)} ${pill(l.session)}</div>
+            <div>
+              <div class="log-head">${pill(l.date,'blue')} ${pill(l.session)} ${pill(act,cls)}</div>
               <h3>${escapeHtml(l.exercise)}</h3>
-              <p class="muted small">${escapeHtml(l.load || "—")} kg · reps ${escapeHtml(l.r1||"-")}/${escapeHtml(l.r2||"-")}/${escapeHtml(l.r3||"-")}/${escapeHtml(l.r4||"-")} · total ${totalReps(l)} · RPE ${escapeHtml(l.rpe||"—")}</p>
+              <p class="muted">${escapeHtml(l.load || '—')} kg · reps ${escapeHtml(l.r1||'-')}/${escapeHtml(l.r2||'-')}/${escapeHtml(l.r3||'-')}/${escapeHtml(l.r4||'-')} · total ${totalReps(l)} · RPE ${escapeHtml(l.rpe || '—')}</p>
             </div>
             <button class="danger" onclick="deleteLog('${l.id}')">Suppr.</button>
-          </div>
-        `;
-      }).join("") : `<div class="card empty">Aucune séance enregistrée pour l'instant.</div>`}
-    </section>
-  `;
+          </div>`;
+      }).join('')}</div>` : `<div class="card empty">Aucune séance enregistrée pour l'instant.</div>`}
+    </section>`;
 }
 
 function deleteLog(logId){
-  state.logs = state.logs.filter(l=>l.id!==logId);
+  state.logs = state.logs.filter(l => l.id !== logId);
   render();
-}
-
-function weeklyVolume(){
-  const res = {};
-  allExercises().forEach(e => res[e.muscle] = (res[e.muscle] || 0) + e.sets);
-  return Object.entries(res).map(([muscle,sets]) => ({muscle,sets})).sort((a,b)=>b.sets-a.sets);
-}
-
-function records(){
-  return allExercises().map(ex => {
-    const logs = state.logs.filter(l=>l.exercise===ex.name);
-    return {
-      name: ex.name,
-      load: Math.max(0, ...logs.map(l=>num(l.load))),
-      reps: Math.max(0, ...logs.map(totalReps))
-    };
-  });
+  showToast('Entrée supprimée.');
 }
 
 function viewStats(){
   const vol = weeklyVolume();
-  const max = Math.max(...vol.map(v=>v.sets),1);
+  const max = Math.max(...vol.map(v=>v.sets), 1);
+  const recs = records().slice(0,8);
   return `
     <section class="grid">
       <div class="card pad">
-        <h2>Stats</h2>
-        <p class="muted small" style="margin-top:6px">De quoi vérifier l'équilibre du programme, les records et l'évolution poids/tour de taille.</p>
+        <div class="section-head"><div><h2>Stats</h2><p class="muted small">Volume du programme, records et évolution poids / taille.</p></div>${pill('Vue synthèse','teal')}</div>
       </div>
       <div class="grid2">
-        <div class="card stats-card">
+        <div class="card pad">
           <h3>Volume hebdo par muscle</h3>
           <div style="margin-top:14px">
             ${vol.map(v=>`
@@ -545,152 +1405,1177 @@ function viewStats(){
                 <div class="bar"><span style="width:${Math.round((v.sets/max)*100)}%"></span></div>
                 <span class="small muted">${v.sets}</span>
               </div>
-            `).join("")}
+            `).join('')}
           </div>
         </div>
-        <div class="card stats-card">
+        <div class="card pad">
           <h3>Poids & tour de taille</h3>
-          <p class="muted small" style="margin-top:6px">Ajoute au moins deux mesures pour rendre le graphique utile.</p>
+          <p class="muted small" style="margin-top:6px">Ajoute au moins 2 mesures pour rendre le graphique utile.</p>
           <canvas id="weightChart" width="700" height="330"></canvas>
         </div>
       </div>
       <div class="card pad">
-        <h3>Records</h3>
-        <div style="overflow-x:auto;margin-top:10px">
-          <table>
-            <thead><tr><th>Exercice</th><th>Charge max</th><th>Meilleur total reps</th></tr></thead>
-            <tbody>
-              ${records().map(r=>`<tr><td><b>${escapeHtml(r.name)}</b></td><td>${r.load || "—"} kg</td><td>${r.reps || "—"}</td></tr>`).join("")}
-            </tbody>
-          </table>
-        </div>
+        <div class="section-head"><div><h2>Records</h2><p class="muted small">Triés par intensité globale.</p></div></div>
+        ${recs.length ? `<div class="record-grid" style="grid-template-columns:repeat(4,1fr)">${recs.map(r=>`
+          <div class="record-card">
+            ${pill('Record','violet')}
+            <h3 style="margin-top:10px">${escapeHtml(r.name)}</h3>
+            <div class="value mono">${r.load ? r.load+' kg' : '—'}</div>
+            <div class="muted small">Meilleur total reps : ${r.reps || '—'}</div>
+          </div>`).join('')}</div>` : `<div class="empty">Aucun record à afficher.</div>`}
       </div>
-    </section>
-  `;
+    </section>`;
 }
 
 function drawWeightChart(){
-  const canvas = document.getElementById("weightChart");
+  const canvas = document.getElementById('weightChart');
   if(!canvas) return;
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext('2d');
   const data = state.measurements.filter(m=>num(m.weight)||num(m.waist)).slice(-20);
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle="#ffffff"; ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.strokeStyle="#e6eaf2"; ctx.lineWidth=1;
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,canvas.width,canvas.height);
   for(let i=0;i<6;i++){
-    let y = 40 + i*48;
-    ctx.beginPath(); ctx.moveTo(45,y); ctx.lineTo(canvas.width-20,y); ctx.stroke();
+    const y = 40 + i*48;
+    ctx.strokeStyle = '#e6eaf2'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(46,y); ctx.lineTo(canvas.width-18,y); ctx.stroke();
   }
-  ctx.fillStyle="#697386"; ctx.font="13px system-ui";
+  ctx.fillStyle = '#64748b'; ctx.font = '13px system-ui';
   if(data.length < 2){
-    ctx.fillText("Pas assez de données.", 45, 160);
+    ctx.fillText('Pas assez de données.', 50, 160);
     return;
   }
   const vals = data.flatMap(m => [num(m.weight)||null, num(m.waist)||null]).filter(Boolean);
-  const min = Math.min(...vals)-2, max = Math.max(...vals)+2;
-  function x(i){ return 55 + i*((canvas.width-95)/(data.length-1)); }
-  function y(v){ return 280 - ((v-min)/(max-min))*230; }
-  function line(key, color){
-    ctx.strokeStyle=color; ctx.lineWidth=4; ctx.beginPath();
-    let started=false;
+  const min = Math.min(...vals) - 2;
+  const max = Math.max(...vals) + 2;
+  function x(i){ return 58 + i * ((canvas.width - 96) / (data.length - 1)); }
+  function y(v){ return 278 - ((v-min) / (max-min || 1))*228; }
+  function line(key,color){
+    ctx.strokeStyle = color; ctx.lineWidth = 4; ctx.beginPath();
+    let started = false;
     data.forEach((m,i)=>{
-      const v = num(m[key]);
-      if(!v) return;
-      if(!started){ ctx.moveTo(x(i), y(v)); started=true; }
-      else ctx.lineTo(x(i), y(v));
+      const v = num(m[key]); if(!v) return;
+      if(!started){ ctx.moveTo(x(i), y(v)); started=true; } else ctx.lineTo(x(i), y(v));
     });
     ctx.stroke();
+    data.forEach((m,i)=>{
+      const v = num(m[key]); if(!v) return;
+      ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x(i), y(v), 4, 0, Math.PI*2); ctx.fill();
+    });
   }
-  line("weight", "#2563eb");
-  line("waist", "#059669");
-  ctx.fillStyle="#2563eb"; ctx.fillText("Poids", 55, 25);
-  ctx.fillStyle="#059669"; ctx.fillText("Taille", 115, 25);
-  ctx.fillStyle="#697386";
-  data.forEach((m,i)=>{ if(i%Math.ceil(data.length/5)===0) ctx.fillText((m.date||"").slice(5), x(i)-12, 310); });
+  line('weight','#2563eb');
+  line('waist','#10b981');
+  ctx.fillStyle='#2563eb'; ctx.fillText('Poids',58,24);
+  ctx.fillStyle='#10b981'; ctx.fillText('Taille',115,24);
+  ctx.fillStyle='#64748b';
+  data.forEach((m,i)=>{ if(i % Math.ceil(data.length/5) === 0) ctx.fillText((m.date||'').slice(5), x(i)-12, 308); });
 }
 
 function viewMeasures(){
   return `
     <section class="grid">
       <div class="card hero">
-        <div>
-          <h2>Mesures</h2>
-          <p class="muted small" style="margin-top:6px">Le tour de taille + le poids moyen sont plus fiables que le poids d'un seul jour.</p>
+        <div class="hero-main" style="background:linear-gradient(135deg,#3b82f6,#14b8a6,#22c55e)">
+          <span class="eyebrow">📏 Mesures</span>
+          <div class="hero-title">Poids, taille, sommeil et nutrition.</div>
+          <div class="hero-desc">Plus tu es régulier dans tes mesures, plus les tendances deviennent utiles.</div>
+          <div class="hero-actions"><button onclick="addMeasure()">Ajouter une mesure</button></div>
         </div>
-        <button class="primary" onclick="addMeasure()">Ajouter une mesure</button>
+        <div class="hero-side">
+          <div class="mini-card">
+            <div class="section-head"><h3>Total relevés</h3>${pill(String(state.measurements.length),'green')}</div>
+            <p>${state.measurements.length ? 'Tu peux suivre ton évolution dans l\'onglet Stats.' : 'Commence par un premier relevé.'}</p>
+          </div>
+        </div>
       </div>
-      ${state.measurements.length ? [...state.measurements].reverse().map(m => `
-        <div class="card measure-row">
-          <label>Date<input type="date" value="${escapeHtml(m.date)}" onchange="updateMeasure('${m.id}','date',this.value)"></label>
-          <label>Poids<input inputmode="decimal" value="${escapeHtml(m.weight||"")}" onchange="updateMeasure('${m.id}','weight',this.value)" placeholder="kg"></label>
-          <label>Taille<input inputmode="decimal" value="${escapeHtml(m.waist||"")}" onchange="updateMeasure('${m.id}','waist',this.value)" placeholder="cm"></label>
-          <label>Calories<input inputmode="decimal" value="${escapeHtml(m.calories||"")}" onchange="updateMeasure('${m.id}','calories',this.value)" placeholder="kcal"></label>
-          <label>Protéines<input inputmode="decimal" value="${escapeHtml(m.protein||"")}" onchange="updateMeasure('${m.id}','protein',this.value)" placeholder="g"></label>
-          <label>Sommeil<input inputmode="decimal" value="${escapeHtml(m.sleep||"")}" onchange="updateMeasure('${m.id}','sleep',this.value)" placeholder="h"></label>
-          <label>Pas<input inputmode="decimal" value="${escapeHtml(m.steps||"")}" onchange="updateMeasure('${m.id}','steps',this.value)" placeholder="pas"></label>
-          <button class="danger" onclick="deleteMeasure('${m.id}')">Suppr.</button>
-        </div>
-      `).join("") : `<div class="card empty">Aucune mesure pour l'instant.</div>`}
-    </section>
-  `;
+      ${state.measurements.length ? `<div class="grid">${[...state.measurements].reverse().map(m => `
+        <div class="measure-card card">
+          <div class="measure-row">
+            <label>Date<input type="date" value="${escapeHtml(m.date)}" onchange="updateMeasure('${m.id}','date',this.value)"></label>
+            <label>Poids<input inputmode="decimal" value="${escapeHtml(m.weight||'')}" onchange="updateMeasure('${m.id}','weight',this.value)" placeholder="kg"></label>
+            <label>Taille<input inputmode="decimal" value="${escapeHtml(m.waist||'')}" onchange="updateMeasure('${m.id}','waist',this.value)" placeholder="cm"></label>
+            <label>Calories<input inputmode="decimal" value="${escapeHtml(m.calories||'')}" onchange="updateMeasure('${m.id}','calories',this.value)" placeholder="kcal"></label>
+            <label>Protéines<input inputmode="decimal" value="${escapeHtml(m.protein||'')}" onchange="updateMeasure('${m.id}','protein',this.value)" placeholder="g"></label>
+            <label>Sommeil<input inputmode="decimal" value="${escapeHtml(m.sleep||'')}" onchange="updateMeasure('${m.id}','sleep',this.value)" placeholder="h"></label>
+            <label>Pas<input inputmode="decimal" value="${escapeHtml(m.steps||'')}" onchange="updateMeasure('${m.id}','steps',this.value)" placeholder="pas"></label>
+            <button class="danger" onclick="deleteMeasure('${m.id}')">Suppr.</button>
+          </div>
+        </div>`).join('')}</div>` : `<div class="card empty">Aucune mesure pour l'instant.</div>`}
+    </section>`;
 }
-
 function addMeasure(){
-  state.measurements.push({id:id(), date:today(), weight:"", waist:"", calories:"", protein:"", sleep:"", steps:""});
+  state.measurements.push({id:id(), date:today(), weight:'', waist:'', calories:'', protein:'', sleep:'', steps:''});
   render();
+  showToast('Nouvelle mesure ajoutée.');
 }
-function updateMeasure(mid, key, value){
-  state.measurements = state.measurements.map(m => m.id===mid ? {...m, [key]:value} : m);
+function updateMeasure(mid,key,value){
+  state.measurements = state.measurements.map(m => m.id===mid ? {...m,[key]:value} : m);
+  postRenderEnhance();
   save();
 }
 function deleteMeasure(mid){
-  state.measurements = state.measurements.filter(m=>m.id!==mid);
+  state.measurements = state.measurements.filter(m => m.id!==mid);
   render();
+  showToast('Mesure supprimée.');
 }
 
 function viewProgram(){
   return `
     <section class="grid">
       <div class="card pad">
-        <h2>Programme complet</h2>
-        <p class="muted small" style="margin-top:6px">Organisation conseillée : lundi Push, mardi Pull, mercredi Jambes + abdos, jeudi repos/cardio léger, vendredi Haut du corps, samedi Bras + épaules, dimanche repos.</p>
+        <div class="section-head"><div><h2>Programme complet</h2><p class="muted small">Organisation conseillée : lundi Push, mardi Pull, mercredi Jambes + abdos, jeudi repos/cardio léger, vendredi Haut du corps, samedi Bras + épaules, dimanche repos.</p></div>${pill('5 jours','blue')}</div>
       </div>
       <div class="program-grid">
-        ${Object.entries(program).map(([day,list]) => `
-          <div class="card pad">
-            <h3>${escapeHtml(day)}</h3>
-            ${list.map(ex => `
-              <div class="program-ex">
-                <div>${pill(ex.muscle)} ${pill(ex.priority, ex.priority==="Haute"?"green":"")}</div>
-                <h3 style="font-size:15px;margin-top:8px">${escapeHtml(ex.name)}</h3>
-                <p class="muted small" style="margin-top:4px">${ex.sets}×${ex.min}–${ex.max} · repos ${ex.rest}</p>
-                <p class="muted small" style="margin-top:6px">${escapeHtml(ex.tip)}</p>
+        ${Object.entries(program).map(([day,list])=>`
+          <div class="card program-card">
+            <div class="session-cover ${sessionClass(day)}" style="min-height:120px;margin-bottom:14px">
+              <div class="content">
+                <div class="eyebrow">${sessionIcon(day)} Séance</div>
+                <h2 style="font-size:26px">${escapeHtml(day)}</h2>
               </div>
-            `).join("")}
-          </div>
-        `).join("")}
+            </div>
+            ${list.map(ex=>`
+              <div class="program-ex">
+                <div>${pill(ex.muscle)} ${pill(ex.priority, ex.priority==='Haute' ? 'green' : ex.priority==='Basse' ? 'amber' : '')}</div>
+                <h3 style="margin-top:10px;font-size:16px">${escapeHtml(ex.name)}</h3>
+                <p class="muted small" style="margin-top:6px">${ex.sets} × ${ex.min}–${ex.max} · repos ${ex.rest}</p>
+                <p class="muted small" style="margin-top:8px">${escapeHtml(ex.tip)}</p>
+                <button style="margin-top:10px" onclick="openExerciseDetail('${escapeHtml(ex.name)}')">Voir fiche</button>
+              </div>`).join('')}
+          </div>`).join('')}
       </div>
       <div class="card pad">
-        <h3>Sauvegarde</h3>
-        <p class="muted small" style="margin-top:6px">Les données restent dans ce navigateur. Fais un export JSON régulièrement si tu l'utilises vraiment.</p>
-        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <div class="section-head"><div><h2>Sauvegarde</h2><p class="muted small">Les données sont stockées dans ce navigateur.</p></div></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button onclick="exportData()">Exporter JSON</button>
+          <button onclick="exportJournalCSV()">Export journal CSV</button>
+          <button onclick="exportMeasuresCSV()">Export mesures CSV</button>
+          <button onclick="openCopySummary()">Résumé copiable</button>
+          <button onclick="exportJournalCSV()">Export journal CSV</button>
+          <button onclick="exportMeasuresCSV()">Export mesures CSV</button>
+          <button onclick="openCopySummary()">Résumé copiable</button>
           <label class="filelabel">Importer JSON<input type="file" accept="application/json" onchange="importData(event)"></label>
           <button class="danger" onclick="resetData()">Effacer les données</button>
+        </div>
+        <div class="footer-note">Pense à faire un export régulier si tu l'utilises sérieusement.</div>
+      </div>
+    </section>`;
+}
+
+
+/* --- V3 : logique séance guidée --- */
+let guided = {
+  active:false,
+  session:null,
+  exerciseIndex:0,
+  setIndex:0,
+  reps:10,
+  load:"",
+  rpe:8,
+  entries:[],
+  startTime:null,
+  finished:false,
+  resting:false,
+  restRemaining:0,
+  restTotal:0,
+  timer:null
+};
+
+function startGuidedSession(sessionName){
+  guided = {
+    active:true,
+    session: sessionName || state.session,
+    exerciseIndex:0,
+    setIndex:0,
+    reps: defaultRepsFor((program[sessionName || state.session] || [])[0]),
+    load:"",
+    rpe:8,
+    entries:[],
+    startTime: Date.now(),
+    finished:false,
+    resting:false,
+    restRemaining:0,
+    restTotal:0,
+    timer:null
+  };
+  state.session = guided.session;
+  state.tab = "guided";
+  render();
+  showToast("Séance guidée démarrée.");
+}
+
+function resetGuidedSession(){
+  stopRestTimer();
+  guided.active = false;
+  guided.finished = false;
+  guided.entries = [];
+  guided.exerciseIndex = 0;
+  guided.setIndex = 0;
+  guided.reps = 10;
+  guided.load = "";
+  guided.rpe = 8;
+  render();
+}
+
+function currentGuidedExercise(){
+  if(!guided.active) return null;
+  const list = guidedExerciseList ? guidedExerciseList() : (program[guided.session] || []);
+  return list[guided.exerciseIndex] || null;
+}
+
+function defaultRepsFor(ex){
+  if(!ex) return 10;
+  return ex.min || 10;
+}
+
+function adjustGuidedReps(delta){
+  guided.reps = Math.max(0, Number(guided.reps || 0) + delta);
+  updateGuidedTimerUI();
+  render();
+}
+
+function setGuidedRpe(v){
+  guided.rpe = v;
+  render();
+}
+
+function setGuidedLoad(v){
+  guided.load = v;
+}
+
+function guidedRestSeconds(ex){
+  if(!ex) return 60;
+  const txt = ex.rest || "";
+  if(txt.includes("120")) return 120;
+  if(txt.includes("90")) return 90;
+  if(txt.includes("75")) return 75;
+  if(txt.includes("60")) return 60;
+  return 60;
+}
+
+function validateGuidedSet(){
+  const ex = currentGuidedExercise();
+  if(!ex) return;
+  const loadEl = document.getElementById("guidedLoad");
+  const load = loadEl ? loadEl.value : guided.load;
+  guided.load = load || guided.load || "";
+  const entry = {
+    id:id(),
+    date:state.date,
+    session:guided.session,
+    exercise:ex.name,
+    muscle:ex.muscle,
+    load:guided.load,
+    r1: guided.setIndex === 0 ? String(guided.reps) : "",
+    r2: guided.setIndex === 1 ? String(guided.reps) : "",
+    r3: guided.setIndex === 2 ? String(guided.reps) : "",
+    r4: guided.setIndex === 3 ? String(guided.reps) : "",
+    rpe:String(guided.rpe),
+    guided:true,
+    setNumber: guided.setIndex + 1
+  };
+  guided.entries.push(entry);
+
+  const rest = guidedRestSeconds(ex);
+  const isLastSetOfExercise = guided.setIndex >= ex.sets - 1;
+  const isLastExercise = guided.exerciseIndex >= (program[guided.session] || []).length - 1;
+
+  if(isLastSetOfExercise && isLastExercise){
+    finishGuidedSession();
+  } else {
+    startRestTimer(rest);
+  }
+}
+
+function nextGuidedStep(){
+  const ex = currentGuidedExercise();
+  if(!ex) return;
+  if(guided.setIndex < ex.sets - 1){
+    guided.setIndex += 1;
+  } else {
+    guided.exerciseIndex += 1;
+    guided.setIndex = 0;
+  }
+  const nextEx = currentGuidedExercise();
+  guided.reps = defaultRepsFor(nextEx);
+  if(nextEx){
+    const last = lastLogForExercise(nextEx.name);
+    guided.load = last?.load || "";
+  }
+  guided.resting = false;
+  stopRestTimer();
+  render();
+}
+
+function startRestTimer(seconds){
+  guided.resting = true;
+  guided.restTotal = seconds;
+  guided.restRemaining = seconds;
+  showRestOverlay();
+  stopRestTimer();
+  guided.timer = setInterval(() => {
+    guided.restRemaining -= 1;
+    updateRestOverlay();
+    if(guided.restRemaining <= 0){
+      stopRestTimer();
+      try{ if(navigator.vibrate) navigator.vibrate([120,80,120]); }catch(e){}
+      showToast("Repos terminé.");
+    }
+  }, 1000);
+  updateRestOverlay();
+}
+
+function stopRestTimer(){
+  if(guided.timer){
+    clearInterval(guided.timer);
+    guided.timer = null;
+  }
+}
+
+function addRest(seconds){
+  guided.restRemaining += seconds;
+  guided.restTotal += seconds;
+  updateRestOverlay();
+}
+
+function skipRest(){
+  stopRestTimer();
+  hideRestOverlay();
+  nextGuidedStep();
+}
+
+function showRestOverlay(){
+  let overlay = document.getElementById("restOverlay");
+  if(!overlay){
+    overlay = document.createElement("div");
+    overlay.id = "restOverlay";
+    overlay.className = "rest-overlay";
+    document.body.appendChild(overlay);
+  }
+  overlay.classList.add("show");
+  updateRestOverlay();
+}
+
+function hideRestOverlay(){
+  const overlay = document.getElementById("restOverlay");
+  if(overlay) overlay.classList.remove("show");
+}
+
+function formatTime(sec){
+  sec = Math.max(0, Number(sec || 0));
+  const m = Math.floor(sec/60);
+  const s = sec % 60;
+  return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+}
+
+function updateRestOverlay(){
+  const overlay = document.getElementById("restOverlay");
+  if(!overlay) return;
+  const pct = guided.restTotal ? Math.round(((guided.restTotal - guided.restRemaining) / guided.restTotal) * 100) : 0;
+  overlay.innerHTML = `
+    <div class="rest-card">
+      <span class="pill blue">Repos</span>
+      <h2 style="margin-top:12px">Respire, récupère.</h2>
+      <div class="timer-ring" style="--p:${pct}%">
+        <div class="timer-text">${formatTime(guided.restRemaining)}</div>
+      </div>
+      <div class="rest-actions">
+        <button onclick="addRest(30)">+30 s</button>
+        <button class="primary" onclick="skipRest()">Passer</button>
+      </div>
+    </div>
+  `;
+}
+
+function updateGuidedTimerUI(){
+  /* hook conservé pour éviter les erreurs si render le rappelle */
+}
+
+function finishGuidedSession(){
+  stopRestTimer();
+  hideRestOverlay();
+  // Fusionne les séries guidées en lignes par exercice pour le journal classique.
+  const grouped = {};
+  guided.entries.forEach(e => {
+    if(!grouped[e.exercise]){
+      grouped[e.exercise] = {
+        id:id(),
+        date:state.date,
+        session:guided.session,
+        exercise:e.exercise,
+        muscle:e.muscle,
+        load:e.load,
+        r1:"",
+        r2:"",
+        r3:"",
+        r4:"",
+        rpe:e.rpe,
+        guided:true
+      };
+    }
+    grouped[e.exercise][`r${e.setNumber}`] = e[`r${e.setNumber}`];
+    grouped[e.exercise].rpe = e.rpe;
+    grouped[e.exercise].load = e.load || grouped[e.exercise].load;
+  });
+  state.logs.push(...Object.values(grouped));
+  save();
+  guided.finished = true;
+  guided.active = false;
+  state.tab = "guided";
+  render();
+  showToast("Séance sauvegardée.");
+}
+
+function guidedSummary(){
+  const duration = guided.startTime ? Math.max(1, Math.round((Date.now() - guided.startTime) / 60000)) : 0;
+  const sets = guided.entries.length;
+  const volume = guided.entries.reduce((sum,e)=> sum + (num(e.load) * num(e[`r${e.setNumber}`])), 0);
+  const exercises = new Set(guided.entries.map(e=>e.exercise)).size;
+  return {duration, sets, volume: Math.round(volume), exercises};
+}
+
+function viewGuided(){
+  if(guided.finished){
+    const s = guidedSummary();
+    const entries = guided.entries;
+    return `
+      <section class="guided-shell">
+        <div class="card pad session-summary">
+          <div class="section-head">
+            <div>
+              <h2>Séance terminée 🎉</h2>
+              <p class="muted small">La séance a été sauvegardée dans ton journal.</p>
+            </div>
+            ${pill(guided.session || state.session, 'green')}
+          </div>
+          <div class="summary-grid">
+            <div class="summary-card"><span class="muted small">Durée</span><b>${s.duration} min</b></div>
+            <div class="summary-card"><span class="muted small">Séries</span><b>${s.sets}</b></div>
+            <div class="summary-card"><span class="muted small">Exercices</span><b>${s.exercises}</b></div>
+            <div class="summary-card"><span class="muted small">Volume</span><b>${s.volume} kg</b></div>
+          </div>
+          <div class="summary-list">
+            ${entries.map(e => `
+              <div class="summary-row">
+                <div>
+                  <b>${escapeHtml(e.exercise)}</b>
+                  <div class="muted small">Série ${e.setNumber} · ${escapeHtml(e.load || '—')} kg · ${escapeHtml(e[`r${e.setNumber}`] || '—')} reps · RPE ${escapeHtml(e.rpe || '—')}</div>
+                </div>
+                ${pill('Validé','green')}
+              </div>
+            `).join('')}
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="primary" onclick="startGuidedSession(state.session)">Refaire une séance guidée</button>
+            <button onclick="setTab('log')">Voir le journal</button>
+            <button onclick="resetGuidedSession()">Fermer</button>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  if(!guided.active){
+    const session = state.session;
+    return `
+      <section class="guided-shell">
+        <div class="card hero">
+          <div class="hero-main" style="background:${heroGradient ? heroGradient(session) : 'linear-gradient(135deg,#2563eb,#7c3aed)'}">
+            <span class="eyebrow">⚡ Mode séance guidée</span>
+            <div class="hero-title">Un exercice à la fois.</div>
+            <div class="hero-desc">Saisie rapide des reps, RPE, chrono de repos automatique et résumé final.</div>
+            <div class="hero-stats">
+              <div class="hero-chip"><span class="small">Séance</span><b>${escapeHtml(session)}</b></div>
+              <div class="hero-chip"><span class="small">Exercices</span><b>${(program[session]||[]).length}</b></div>
+              <div class="hero-chip"><span class="small">Durée estimée</span><b>${estimateSessionDuration ? estimateSessionDuration(session) : '45'} min</b></div>
+            </div>
+            <div class="hero-actions">
+              <button onclick="startGuidedSessionMode(state.session, 'normal')">Démarrer normal</button>
+              <button class="warn" onclick="startGuidedSessionMode(state.session, 'short')">Séance courte</button>
+              <button class="warn" onclick="startGuidedSessionMode(state.session, 'deload')">Deload</button>
+              <button class="secondary" onclick="setTab('today')">Saisie rapide</button>
+            </div>
+          </div>
+          <div class="hero-side">
+            <div class="mini-card">
+              <div class="section-head"><h3>Choisir la séance</h3>${pill('Guidé','blue')}</div>
+              <label>Séance
+                <select onchange="state.session=this.value; save(); render()">
+                  ${Object.keys(program).map(s=>`<option ${s===state.session?'selected':''}>${escapeHtml(s)}</option>`).join('')}
+                </select>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  const list = guidedExerciseList ? guidedExerciseList() : (program[guided.session] || []);
+  const ex = currentGuidedExercise();
+  const progressTotal = list.reduce((sum,e)=>sum+e.sets,0);
+  const doneSets = guided.entries.length;
+  const pct = Math.round((doneSets / Math.max(1, progressTotal)) * 100);
+  const last = ex ? lastLogForExercise(ex.name) : null;
+  if(ex && !guided.load && last?.load) guided.load = last.load;
+
+  return `
+    <section class="guided-shell">
+      <div class="guided-card">
+        <div class="guided-top">
+          <div>
+            <span class="guided-pill">${sessionIcon ? sessionIcon(guided.session) : iconSvg('dumbbell')} ${escapeHtml(guided.session)}</span>
+            <span class="guided-pill">${guided.mode === "short" ? "Séance courte" : guided.mode === "deload" ? "Deload" : "Normal"}</span>
+            <span class="guided-pill">Exercice ${guided.exerciseIndex + 1}/${list.length}</span>
+            <span class="guided-pill">Série ${guided.setIndex + 1}/${ex.sets}</span>
+          </div>
+          <div class="guided-progress">
+            <div class="small" style="font-weight:850;color:rgba(255,255,255,.78)">Progression séance · ${pct}%</div>
+            <div class="guided-progressbar"><span style="width:${pct}%"></span></div>
+          </div>
+        </div>
+
+        <div class="guided-main">
+          <div class="guided-visual">
+            <div class="big-icon">${muscleIcon ? muscleIcon(ex.muscle) : '🏋️'}</div>
+          </div>
+          <div class="guided-info">
+            <h2>${escapeHtml(ex.name)}</h2>
+            <p>${escapeHtml(ex.tip)}</p>
+            <div class="guided-targets">
+              <div class="guided-stat"><div class="label">Charge conseillée</div><div class="value">${nextLoad(ex.name)}</div></div>
+              <div class="guided-stat"><div class="label">Objectif reps</div><div class="value">${ex.min}–${ex.max}</div></div>
+              <div class="guided-stat"><div class="label">Repos</div><div class="value">${ex.rest}</div></div>
+            </div>
+            <div class="quick-target">
+              Dernière perf : ${last ? `${escapeHtml(last.load || '—')} kg · ${repsArray(last).join('/')} · RPE ${escapeHtml(last.rpe || '—')}` : 'aucun historique sur cet exercice'}
+            </div>
+            ${guided.mode === "deload" ? `<div class="session-mode-banner">Mode deload : vise RPE 7–8, technique propre, pas de record.</div>` : guided.mode === "short" ? `<div class="session-mode-banner">Séance courte : uniquement les mouvements prioritaires.</div>` : ``}
+          </div>
+        </div>
+
+        <div class="guided-controls">
+          <div class="guided-panel">
+            <div class="guided-control-title">Reps de la série</div>
+            <div class="rep-stepper">
+              <button onclick="adjustGuidedReps(-1)">−</button>
+              <div class="rep-value">${guided.reps}</div>
+              <button onclick="adjustGuidedReps(1)">+</button>
+            </div>
+            <div class="guided-load">
+              <label style="color:rgba(255,255,255,.82)">Charge kg
+                <input id="guidedLoad" inputmode="decimal" value="${escapeHtml(guided.load || '')}" oninput="setGuidedLoad(this.value)" placeholder="ex: 24">
+              </label>
+              <label style="color:rgba(255,255,255,.82)">Date
+                <input type="date" value="${state.date}" onchange="state.date=this.value; save()">
+              </label>
+            </div>
+          </div>
+
+          <div class="guided-panel">
+            <div class="guided-control-title">Difficulté RPE</div>
+            <div class="rpe-buttons">
+              ${[7,8,9,10].map(v=>`<button class="${guided.rpe===v?'active':''}" onclick="setGuidedRpe(${v})">${v}</button>`).join('')}
+            </div>
+            <div class="guided-actions">
+              <button class="secondary" onclick="resetGuidedSession()">Quitter</button>
+              <button class="main-action" onclick="validateGuidedSet()">Valider la série</button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   `;
 }
 
-function exportData(){
-  const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
+
+
+function trainingDaysLast7(){
+  const threshold = Date.now() - 7*24*3600*1000;
+  const days = new Set(state.logs.filter(l=>new Date(l.date).getTime() >= threshold).map(l=>l.date));
+  return days.size;
+}
+function weeklyBars(){
+  const days = ['Lun','Mar','Mer','Ven','Sam'];
+  const done = Math.min(5, trainingDaysLast7());
+  return days.map((d,i)=> `<div class="week-day ${i<done?'done':''}"><div class="d">${d}</div><div class="s">${i<done?'OK':'—'}</div></div>`).join('');
+}
+function recentLoadTrend(){
+  const vals = recentLogs(5).map(l=> Math.max(1, totalReps(l))).reverse();
+  if(!vals.length) return `<span style="height:10px"></span><span style="height:16px"></span><span style="height:12px"></span><span style="height:20px"></span><span style="height:15px"></span>`;
+  const max = Math.max(...vals, 1);
+  return vals.map(v=> `<span style="height:${Math.max(8, Math.round((v/max)*34))}px"></span>`).join('');
+}
+function postRenderEnhance(){
+  if(state.tab === 'dashboard'){
+    const cards4 = document.querySelector('.cards4');
+    if(cards4 && !document.getElementById('dashboardProgressCard')){
+      const wrap = document.createElement('div');
+      wrap.className = 'dashboard-progress';
+      wrap.id = 'dashboardProgressCard';
+      const done = Math.min(5, trainingDaysLast7());
+      const pct = Math.round((done/5)*100);
+      wrap.innerHTML = `
+        <div class="section-head" style="margin-bottom:0">
+          <div>
+            <h3>Objectif hebdo</h3>
+            <p class="muted small">Visualise rapidement ta progression sur 5 séances.</p>
+          </div>
+          ${pill(done + '/5 séances','green')}
+        </div>
+        <div class="week-bar"><span style="width:${pct}%"></span></div>
+        <div class="week-track">${weeklyBars()}</div>
+        <div class="grid2" style="grid-template-columns:1.2fr .8fr;gap:12px">
+          <div class="kpi" style="box-shadow:none">
+            <div class="label">Régularité</div>
+            <div class="value mono">${pct}%</div>
+            <div class="delta">sur l'objectif hebdomadaire</div>
+          </div>
+          <div class="kpi" style="box-shadow:none">
+            <div class="label">Tendance récente</div>
+            <div class="micro-spark">${recentLoadTrend()}</div>
+            <div class="delta">basée sur tes dernières entrées</div>
+          </div>
+        </div>
+      `;
+      cards4.parentNode.insertBefore(wrap, cards4);
+    }
+  }
+}
+
+
+
+/* --- V5 : objectifs, fiches exercice, CSV, résumé copiable --- */
+function exerciseHistory(name){
+  return state.logs.filter(l => l.exercise === name);
+}
+function lastTwoLogs(name){
+  return exerciseHistory(name).slice(-2);
+}
+function bestLogFor(name){
+  const logs = exerciseHistory(name);
+  if(!logs.length) return null;
+  return logs.slice().sort((a,b) => (num(b.load)*totalReps(b) + totalReps(b)) - (num(a.load)*totalReps(a) + totalReps(a)))[0];
+}
+function nextTargetForExercise(ex){
+  const logs = exerciseHistory(ex.name);
+  const last = logs[logs.length - 1];
+  if(!last) return {
+    label:"Premier objectif",
+    text:`Démarre à une charge confortable et vise ${ex.sets}×${ex.min}.`,
+    load:"—",
+    reps:Array(ex.sets).fill(ex.min)
+  };
+
+  const [action] = actionFor(last, ex);
+  const currentLoad = num(last.load);
+  const reps = [last.r1,last.r2,last.r3,last.r4].map(num).slice(0, ex.sets);
+  const cleanReps = reps.map(r => r || ex.min);
+  const inc = isIsolation(ex) ? 1 : 2;
+
+  if(action === "Augmenter"){
+    return {
+      label:"Augmenter",
+      text:`Passe à ${currentLoad ? currentLoad + inc : "une charge supérieure"} kg et vise ${ex.sets}×${ex.min}.`,
+      load: currentLoad ? `${currentLoad + inc} kg` : "charge supérieure",
+      reps:Array(ex.sets).fill(ex.min)
+    };
+  }
+  if(action === "Alléger / revoir forme"){
+    return {
+      label:"Alléger / technique",
+      text:`Réduis légèrement ou garde ${currentLoad || "la charge"} kg avec exécution plus propre.`,
+      load: currentLoad ? `${Math.max(0,currentLoad-inc)}–${currentLoad} kg` : "à ajuster",
+      reps:Array(ex.sets).fill(ex.min)
+    };
+  }
+
+  // Objectif +1 rep totale, en augmentant la première série non au max.
+  const target = cleanReps.slice();
+  const idx = target.findIndex(r => r < ex.max);
+  if(idx >= 0) target[idx] += 1;
+  return {
+    label:"Conserver",
+    text:`Garde ${currentLoad || "la charge"} kg et vise +1 rep totale.`,
+    load: currentLoad ? `${currentLoad} kg` : "même charge",
+    reps:target
+  };
+}
+function isIsolation(ex){
+  const m = slug(ex.muscle);
+  return m.includes("biceps") || m.includes("triceps") || m.includes("epaules") || m.includes("deltoide") || m.includes("abdos");
+}
+function exerciseMistakes(ex){
+  const n = slug(ex.name);
+  if(n.includes("rowing")) return ["Tirer avec le biceps au lieu du dos", "Tourner le buste en fin de tirage", "Réduire l’amplitude pour charger trop lourd"];
+  if(n.includes("militaire")) return ["Cambrer excessivement", "Verrouiller trop violemment en haut", "Descendre trop peu"];
+  if(n.includes("decline") || n.includes("developpe-decline")) return ["Épaules qui remontent", "Descente trop rapide", "Coudes trop ouverts"];
+  if(n.includes("goblet")) return ["Amplitude trop courte", "Genoux qui rentrent", "Buste qui s’effondre"];
+  if(n.includes("fentes")) return ["Pas trop court", "Perte d’équilibre", "Genou avant qui rentre"];
+  if(n.includes("curl")) return ["Élan avec le dos", "Coudes qui avancent trop", "Descente non contrôlée"];
+  if(n.includes("elevations")) return ["Trop lourd", "Trapèzes qui prennent tout", "Élan du buste"];
+  if(n.includes("triceps")) return ["Coudes qui s’écartent", "Amplitude partielle", "Charge trop lourde"];
+  if(n.includes("gainage")) return ["Bassin trop haut", "Bas du dos cambré", "Respiration bloquée"];
+  return ["Charge trop lourde", "Amplitude raccourcie", "Perte de contrôle"];
+}
+function exerciseSecondary(ex){
+  const m = slug(ex.muscle);
+  if(m.includes("pec")) return "triceps, épaules antérieures";
+  if(m.includes("dos")) return "biceps, deltoïde postérieur, gainage";
+  if(m.includes("epaules") || m.includes("deltoide")) return "trapèzes, triceps ou haut du dos selon mouvement";
+  if(m.includes("biceps")) return "avant-bras";
+  if(m.includes("triceps")) return "épaules, gainage";
+  if(m.includes("jambes")) return "fessiers, gainage";
+  if(m.includes("abdos")) return "obliques, transverse";
+  return "muscles stabilisateurs";
+}
+function openExerciseDetail(exName){
+  const ex = findExercise(exName);
+  if(!ex) return;
+  const modal = document.getElementById("detailModal");
+  if(!modal) return;
+  const hist = exerciseHistory(ex.name);
+  const last = hist[hist.length - 1];
+  const best = bestLogFor(ex.name);
+  const target = nextTargetForExercise(ex);
+  const mistakes = exerciseMistakes(ex);
+  modal.innerHTML = `
+    <div class="detail-card">
+      <div class="detail-hero" style="background:${detailGradient(ex.muscle)}">
+        <button class="detail-close" onclick="closeExerciseDetail()">Fermer</button>
+        <div class="detail-hero-content">
+          ${pill(ex.muscle)}
+          ${pill(ex.priority, ex.priority === "Haute" ? "green" : "")}
+          <h2>${escapeHtml(ex.name)}</h2>
+          <p style="color:rgba(255,255,255,.86);max-width:62ch">${escapeHtml(ex.tip)}</p>
+          <div class="image-slot">${muscleIcon(ex.muscle)}</div>
+        </div>
+      </div>
+      <div class="detail-body">
+        <div class="target-card">
+          <div>
+            ${pill(target.label, target.label === "Augmenter" ? "green" : target.label.includes("Alléger") ? "red" : "blue")}
+            <div style="margin-top:8px"><b>Prochain objectif</b></div>
+            <div class="muted small">${escapeHtml(target.text)}</div>
+          </div>
+          <div style="text-align:right">
+            <b>${escapeHtml(target.load)}</b>
+            <div class="muted small">${target.reps.join(" / ")}</div>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-box">
+            <h3>Dernière performance</h3>
+            ${last ? `
+              <div class="detail-list">
+                <div><b>${escapeHtml(last.load || "—")} kg</b> · ${repsArray(last).join(" / ")} · total ${totalReps(last)} reps</div>
+                <div>RPE ${escapeHtml(last.rpe || "—")} · ${escapeHtml(last.date || "")}</div>
+              </div>` : `<p class="muted">Aucune donnée pour le moment.</p>`}
+          </div>
+          <div class="detail-box">
+            <h3>Meilleur résultat</h3>
+            ${best ? `
+              <div class="detail-list">
+                <div><b>${escapeHtml(best.load || "—")} kg</b> · ${repsArray(best).join(" / ")} · total ${totalReps(best)} reps</div>
+                <div>Volume estimé : ${Math.round(num(best.load)*totalReps(best))} kg</div>
+              </div>` : `<p class="muted">Pas encore de record.</p>`}
+          </div>
+          <div class="detail-box">
+            <h3>Muscles</h3>
+            <div class="detail-list">
+              <div>Principal : <b>${escapeHtml(ex.muscle)}</b></div>
+              <div>Secondaires : ${escapeHtml(exerciseSecondary(ex))}</div>
+            </div>
+          </div>
+          <div class="detail-box">
+            <h3>Erreurs fréquentes</h3>
+            <div class="detail-list">
+              ${mistakes.map(m => `<div>${escapeHtml(m)}</div>`).join("")}
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-box">
+          <h3>Historique rapide</h3>
+          ${hist.length ? `<div class="summary-list">
+            ${hist.slice(-5).reverse().map(l => `
+              <div class="summary-row">
+                <div>
+                  <b>${escapeHtml(l.date)}</b>
+                  <div class="muted small">${escapeHtml(l.load || "—")} kg · ${repsArray(l).join(" / ")} · RPE ${escapeHtml(l.rpe || "—")}</div>
+                </div>
+                ${pill(`${totalReps(l)} reps`, "blue")}
+              </div>
+            `).join("")}
+          </div>` : `<p class="muted">Aucune entrée enregistrée.</p>`}
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="primary" onclick="closeExerciseDetail(); startGuidedSessionForExercise('${escapeHtml(ex.name)}')">Démarrer cet exercice</button>
+          <button onclick="closeExerciseDetail()">Fermer</button>
+        </div>
+      </div>
+    </div>
+  `;
+  modal.classList.add("show");
+}
+function closeExerciseDetail(){
+  const modal = document.getElementById("detailModal");
+  if(modal) modal.classList.remove("show");
+}
+function detailGradient(muscle){
+  const s = slug(muscle);
+  if(s.includes("pec")) return "linear-gradient(135deg,#2563eb,#60a5fa)";
+  if(s.includes("dos")) return "linear-gradient(135deg,#7c3aed,#a78bfa)";
+  if(s.includes("epaules") || s.includes("deltoide")) return "linear-gradient(135deg,#f97316,#f59e0b)";
+  if(s.includes("biceps")) return "linear-gradient(135deg,#059669,#34d399)";
+  if(s.includes("triceps")) return "linear-gradient(135deg,#dc2626,#fb7185)";
+  if(s.includes("jambes")) return "linear-gradient(135deg,#4f46e5,#818cf8)";
+  if(s.includes("abdos")) return "linear-gradient(135deg,#0f766e,#2dd4bf)";
+  return "linear-gradient(135deg,#2563eb,#7c3aed)";
+}
+function startGuidedSessionForExercise(exName){
+  const sessionName = Object.entries(program).find(([_, list]) => list.some(e => e.name === exName))?.[0] || state.session;
+  startGuidedSession(sessionName);
+  const idx = (program[sessionName] || []).findIndex(e => e.name === exName);
+  if(idx >= 0){
+    guided.exerciseIndex = idx;
+    guided.setIndex = 0;
+    const ex = currentGuidedExercise();
+    const last = lastLogForExercise(ex.name);
+    guided.load = last?.load || "";
+    guided.reps = defaultRepsFor(ex);
+  }
+  render();
+}
+function csvEscape(v){
+  const s = String(v ?? "");
+  return `"${s.replaceAll('"','""')}"`;
+}
+function exportJournalCSV(){
+  const headers = ["date","session","exercise","muscle","load","r1","r2","r3","r4","total_reps","rpe"];
+  const rows = state.logs.map(l => [l.date,l.session,l.exercise,l.muscle,l.load,l.r1,l.r2,l.r3,l.r4,totalReps(l),l.rpe]);
+  downloadCSV("journal-entrainement.csv", [headers, ...rows]);
+}
+function exportMeasuresCSV(){
+  const headers = ["date","weight","waist","calories","protein","sleep","steps"];
+  const rows = state.measurements.map(m => [m.date,m.weight,m.waist,m.calories,m.protein,m.sleep,m.steps]);
+  downloadCSV("mesures-entrainement.csv", [headers, ...rows]);
+}
+function downloadCSV(filename, rows){
+  const csv = rows.map(r => r.map(csvEscape).join(",")).join("\n");
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("Export CSV lancé.");
+}
+function latestSessionSummaryText(){
+  const latestDate = state.logs.length ? state.logs[state.logs.length - 1].date : "";
+  const logs = state.logs.filter(l => l.date === latestDate);
+  if(!logs.length) return "Aucune séance enregistrée.";
+  const session = logs[0].session;
+  const totalSets = logs.reduce((sum,l)=>sum+repsArray(l).length,0);
+  const volume = logs.reduce((sum,l)=>sum+num(l.load)*totalReps(l),0);
+  return [
+    `Séance ${session} — ${latestDate}`,
+    `${totalSets} séries · volume estimé ${Math.round(volume)} kg`,
+    "",
+    ...logs.map(l => `${l.exercise} : ${l.load || "—"} kg · ${repsArray(l).join("/") || "—"} · RPE ${l.rpe || "—"}`)
+  ].join("\n");
+}
+function openCopySummary(){
+  const modal = document.getElementById("detailModal");
+  if(!modal) return;
+  const text = latestSessionSummaryText();
+  modal.innerHTML = `
+    <div class="detail-card">
+      <div class="detail-body copy-summary">
+        <div class="section-head">
+          <div>
+            <h2>Résumé copiable</h2>
+            <p class="muted small">Pratique pour me l’envoyer ensuite ou garder une trace propre.</p>
+          </div>
+          <button onclick="closeExerciseDetail()">Fermer</button>
+        </div>
+        <textarea class="summary-textarea" id="summaryTextarea">${escapeHtml(text)}</textarea>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="primary" onclick="copySummaryToClipboard()">Copier le résumé</button>
+          <button onclick="closeExerciseDetail()">Fermer</button>
+        </div>
+      </div>
+    </div>
+  `;
+  modal.classList.add("show");
+}
+function copySummaryToClipboard(){
+  const el = document.getElementById("summaryTextarea");
+  if(!el) return;
+  el.select();
+  try{
+    document.execCommand("copy");
+    showToast("Résumé copié.");
+  }catch(e){
+    showToast("Copie impossible, sélectionne le texte manuellement.");
+  }
+}
+
+
+
+/* --- V6 : récupération et modes intelligents --- */
+function safeRecovery(){ if(!Array.isArray(state.recovery)) state.recovery = []; return state.recovery; }
+function latestRecovery(){ return [...safeRecovery()].reverse().find(r => r.date); }
+function readinessScore(){
+  const r = latestRecovery();
+  if(!r) return 72;
+  const energy = num(r.energy) || 3;
+  const sleep = num(r.sleepQuality) || 3;
+  const soreness = num(r.soreness) || 3;
+  const pain = num(r.pain) || 1;
+  const motivation = num(r.motivation) || 3;
+  let score = (energy*18) + (sleep*16) + (motivation*12) + ((6-soreness)*12) + ((6-pain)*10);
+  return Math.max(15, Math.min(100, Math.round(score)));
+}
+function recoveryAdvice(){
+  const score = readinessScore();
+  const r = latestRecovery();
+  if(!r) return {tone:"blue", title:"Récupération à renseigner", text:"Ajoute un check rapide énergie/sommeil/courbatures pour personnaliser les recommandations."};
+  if(num(r.pain) >= 4) return {tone:"red", title:"Douleur élevée", text:"Évite d’augmenter les charges aujourd’hui. Privilégie technique, amplitude propre ou séance allégée."};
+  if(score >= 78) return {tone:"green", title:"Bonne disponibilité", text:"Tu peux faire une séance normale. Augmente seulement les exercices validés à RPE raisonnable."};
+  if(score >= 55) return {tone:"amber", title:"Disponibilité moyenne", text:"Fais la séance prévue, mais garde 1–2 reps en réserve et ne force pas les progressions."};
+  return {tone:"red", title:"Récupération basse", text:"Fais une séance courte ou deload. Objectif : entretien, technique, pas de record."};
+}
+function musclesCoveredThisWeek(){
+  const threshold = Date.now() - 7*24*3600*1000;
+  return new Set(state.logs.filter(l => new Date(l.date).getTime() >= threshold).map(l => l.muscle).filter(Boolean));
+}
+function recommendedSessionByCoverage(){
+  const covered = musclesCoveredThisWeek();
+  const needs = [
+    {session:"Jambes + abdos", muscles:["Jambes","Abdos"]},
+    {session:"Pull", muscles:["Dos","Biceps","Deltoïde postérieur"]},
+    {session:"Push", muscles:["Pecs","Épaules","Triceps"]},
+    {session:"Haut du corps", muscles:["Dos","Pecs","Épaules"]},
+    {session:"Bras + épaules", muscles:["Biceps","Triceps","Épaules","Deltoïde postérieur"]}
+  ];
+  const scored = needs.map(n => ({session:n.session, missing:n.muscles.filter(m => !covered.has(m)).length})).sort((a,b) => b.missing - a.missing);
+  return scored[0]?.missing ? scored[0].session : defaultSession();
+}
+function shortListForSession(sessionName){
+  const list = program[sessionName] || [];
+  const priority = list.filter(e => e.priority === "Haute");
+  const base = priority.length ? priority : list;
+  return base.slice(0, Math.min(3, base.length));
+}
+function deloadListForSession(sessionName){
+  return (program[sessionName] || []).map(e => ({...e, sets: Math.max(2, Math.ceil(e.sets * 0.65)), max: Math.max(e.min, Math.floor(e.max * 0.85)), deload:true}));
+}
+function startGuidedSessionMode(sessionName, mode){
+  const original = program[sessionName || state.session] || [];
+  let list = original;
+  if(mode === "short") list = shortListForSession(sessionName || state.session);
+  if(mode === "deload") list = deloadListForSession(sessionName || state.session);
+  guided = {
+    active:true,
+    session: sessionName || state.session,
+    mode: mode || "normal",
+    exerciseList: list,
+    exerciseIndex:0,
+    setIndex:0,
+    reps: defaultRepsFor(list[0]),
+    load:"",
+    rpe: mode === "deload" ? 7 : 8,
+    entries:[],
+    startTime:Date.now(),
+    finished:false,
+    resting:false,
+    restRemaining:0,
+    restTotal:0,
+    timer:null
+  };
+  state.session = guided.session;
+  state.tab = "guided";
+  render();
+  showToast(mode === "short" ? "Séance courte lancée." : mode === "deload" ? "Mode deload lancé." : "Séance guidée lancée.");
+}
+function startGuidedSession(sessionName){ startGuidedSessionMode(sessionName || state.session, "normal"); }
+function currentGuidedExercise(){
+  if(!guided.active) return null;
+  const list = guided.exerciseList || program[guided.session] || [];
+  return list[guided.exerciseIndex] || null;
+}
+function guidedExerciseList(){ return guided.exerciseList || program[guided.session] || []; }
+function nextGuidedStep(){
+  const ex = currentGuidedExercise();
+  if(!ex) return;
+  if(guided.setIndex < ex.sets - 1){ guided.setIndex += 1; }
+  else { guided.exerciseIndex += 1; guided.setIndex = 0; }
+  const nextEx = currentGuidedExercise();
+  guided.reps = defaultRepsFor(nextEx);
+  if(nextEx){
+    const last = lastLogForExercise(nextEx.name);
+    guided.load = last?.load || "";
+  }
+  guided.resting = false;
+  stopRestTimer();
+  hideRestOverlay();
+  render();
+}
+function finishGuidedSession(){
+  stopRestTimer();
+  hideRestOverlay();
+  const grouped = {};
+  guided.entries.forEach(e => {
+    if(!grouped[e.exercise]){
+      grouped[e.exercise] = {
+        id:id(), date:state.date, session:guided.session, exercise:e.exercise, muscle:e.muscle,
+        load:e.load, r1:"", r2:"", r3:"", r4:"", rpe:e.rpe, guided:true, mode: guided.mode || "normal"
+      };
+    }
+    grouped[e.exercise][`r${e.setNumber}`] = e[`r${e.setNumber}`];
+    grouped[e.exercise].rpe = e.rpe;
+    grouped[e.exercise].load = e.load || grouped[e.exercise].load;
+  });
+  state.logs.push(...Object.values(grouped));
+  save();
+  guided.finished = true;
+  guided.active = false;
+  state.tab = "guided";
+  render();
+  showToast("Séance sauvegardée.");
+}
+function addRecovery(){
+  safeRecovery().push({id:id(), date:today(), energy:"3", sleepQuality:"3", soreness:"3", pain:"1", motivation:"3", note:""});
+  render();
+  showToast("Check récupération ajouté.");
+}
+function updateRecovery(rid, key, value){
+  safeRecovery();
+  state.recovery = state.recovery.map(r => r.id === rid ? {...r, [key]:value} : r);
+  save();
+}
+function deleteRecovery(rid){
+  safeRecovery();
+  state.recovery = state.recovery.filter(r => r.id !== rid);
+  render();
+  showToast("Check supprimé.");
+}
+function ratingButtons(rid, key, value){
+  return `<div class="rating-buttons">${[1,2,3,4,5].map(v => `<button class="${String(value)===String(v) ? 'active' : ''}" onclick="updateRecovery('${rid}','${key}','${v}'); render()">${v}</button>`).join("")}</div>`;
+}
+function coverageView(){
+  const covered = musclesCoveredThisWeek();
+  const muscles = [["Pecs","chest"],["Dos","back"],["Épaules","shoulders"],["Biceps","biceps"],["Triceps","triceps"],["Jambes","legs"],["Abdos","abs"]];
+  return `<div class="coverage-grid">${muscles.map(([m,ic]) => `<div class="coverage-pill ${covered.has(m) ? 'done' : ''}">
+    <div class="icon">${iconSvg(ic)}</div><div class="name">${m}</div><div class="small muted">${covered.has(m) ? 'fait' : 'à faire'}</div>
+  </div>`).join("")}</div>`;
+}
+function miniCalendar(){
+  const days = [];
+  for(let i=6;i>=0;i--){
+    const d = new Date(Date.now() - i*24*3600*1000);
+    const iso = d.toISOString().slice(0,10);
+    const logs = state.logs.filter(l => l.date === iso);
+    days.push({iso, label:d.toLocaleDateString('fr-FR',{weekday:'short', day:'2-digit'}), logs});
+  }
+  return `<div class="mini-calendar">${days.map(d => `<div class="cal-day ${d.logs.length ? 'has' : ''}">
+    <strong>${d.label}</strong>
+    <div class="muted">${d.logs.length ? `${new Set(d.logs.map(l=>l.session)).size} séance` : 'repos'}</div>
+    ${d.logs.length ? `<span class="cal-tag">${escapeHtml(d.logs[0].session)}</span>` : ''}
+  </div>`).join("")}</div>`;
+}
+function viewRecovery(){
+  const rec = safeRecovery();
+  const advice = recoveryAdvice();
+  const score = readinessScore();
+  const suggested = recommendedSessionByCoverage();
+  return `
+    <section class="grid">
+      <div class="card hero">
+        <div class="hero-main" style="background:linear-gradient(135deg,#0ea5e9,#14b8a6,#22c55e)">
+          <span class="eyebrow">${iconSvg('ruler')} Récupération</span>
+          <div class="hero-title">Adapte la séance à ton état réel.</div>
+          <div class="hero-desc">Énergie, sommeil, courbatures et douleur permettent de choisir entre séance normale, courte ou deload.</div>
+          <div class="hero-actions">
+            <button onclick="addRecovery()">Ajouter un check</button>
+            <button class="warn" onclick="startGuidedSessionMode('${suggested}','short')">Séance courte</button>
+            <button class="warn" onclick="startGuidedSessionMode('${suggested}','deload')">Deload</button>
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="mini-card">
+            <div class="section-head"><h3>Readiness</h3>${pill(score + '/100', score >= 78 ? 'green' : score >= 55 ? 'amber' : 'red')}</div>
+            <div class="readiness-ring" style="--score:${score}%"><div class="readiness-score"><b>${score}</b><span class="small muted">/100</span></div></div>
+          </div>
+          <div class="mini-card">
+            <div class="section-head"><h3>${escapeHtml(advice.title)}</h3>${pill('Conseil','teal')}</div>
+            <p>${escapeHtml(advice.text)}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="smart-grid">
+        <div class="smart-card featured">
+          <div class="section-head">
+            <div><h2>Que faire aujourd’hui ?</h2><p class="muted small">Suggestion basée sur muscles travaillés + récupération.</p></div>
+            ${pill(suggested,'blue')}
+          </div>
+          <p>Recommandation : <b>${escapeHtml(suggested)}</b>.</p>
+          <div class="smart-actions">
+            <button class="primary" onclick="startGuidedSessionMode('${suggested}','normal')">Séance normale</button>
+            <button onclick="startGuidedSessionMode('${suggested}','short')">Version courte</button>
+            <button class="warn" onclick="startGuidedSessionMode('${suggested}','deload')">Deload</button>
+          </div>
+        </div>
+        <div class="smart-card">
+          <div class="section-head"><div><h2>Couverture muscles</h2><p class="muted small">7 derniers jours.</p></div></div>
+          ${coverageView()}
+        </div>
+      </div>
+
+      <div class="card pad">
+        <div class="section-head">
+          <div><h2>Calendrier rapide</h2><p class="muted small">Vue simple des 7 derniers jours.</p></div>
+        </div>
+        ${miniCalendar()}
+      </div>
+
+      <div class="card pad">
+        <div class="section-head">
+          <div><h2>Checks récupération</h2><p class="muted small">1 = bas/faible, 5 = haut/fort. Pour douleur, 5 = douleur élevée.</p></div>
+          <button onclick="addRecovery()">Ajouter</button>
+        </div>
+        <div class="grid">
+          ${rec.length ? [...rec].reverse().map(r => `
+            <div class="recovery-row">
+              <label>Date<input type="date" value="${escapeHtml(r.date)}" onchange="updateRecovery('${r.id}','date',this.value)"></label>
+              <label>Énergie${ratingButtons(r.id,'energy',r.energy)}</label>
+              <label>Sommeil${ratingButtons(r.id,'sleepQuality',r.sleepQuality)}</label>
+              <label>Courbatures${ratingButtons(r.id,'soreness',r.soreness)}</label>
+              <label>Douleur${ratingButtons(r.id,'pain',r.pain)}</label>
+              <label>Motivation${ratingButtons(r.id,'motivation',r.motivation)}</label>
+              <button class="danger" onclick="deleteRecovery('${r.id}')">Suppr.</button>
+            </div>
+          `).join("") : `<div class="empty">Aucun check récupération pour l’instant.</div>`}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+
+function exportData(){
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
   a.href = url;
   a.download = `carnet-entrainement-${today()}.json`;
   a.click();
   URL.revokeObjectURL(url);
+  showToast('Export JSON lancé.');
 }
 
 function importData(event){
@@ -700,23 +2585,24 @@ function importData(event){
   reader.onload = () => {
     try{
       const parsed = JSON.parse(String(reader.result));
-      state = { ...state, ...parsed, tab:"today" };
+      state = { ...state, ...parsed, tab:'dashboard' };
       render();
-      alert("Données importées.");
+      showToast('Données importées.');
     }catch(e){
-      alert("Fichier invalide.");
+      showToast('Fichier invalide.');
     }
   };
   reader.readAsText(file);
 }
 
 function resetData(){
-  if(confirm("Effacer toutes les données sauvegardées dans ce navigateur ?")){
+  if(confirm('Effacer toutes les données sauvegardées dans ce navigateur ?')){
     localStorage.removeItem(STORAGE_KEY);
     state.logs = [];
     state.measurements = [];
-    state.tab = "today";
+    state.tab = 'dashboard';
     render();
+    showToast('Données effacées.');
   }
 }
 
